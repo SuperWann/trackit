@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:trackit_dev/widgets/input_form.dart';
+import 'package:provider/provider.dart';
+import 'package:trackit_dev/providers/authProvider.dart';
+import 'package:trackit_dev/widgets/dialog.dart';
+import 'package:trackit_dev/widgets/inputForm.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login';
@@ -17,6 +20,33 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _noTeleponController.dispose();
     super.dispose();
+  }
+
+  void _checkUserByTelepon() async {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final noTelepon = _noTeleponController.text;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Tidak bisa ditutup klik di luar
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      await provider.checkUserByTelepon(_noTeleponController.text);
+
+      Navigator.pop(context);
+
+      Navigator.pushNamed(
+        context,
+        provider.customerExist ? '/loginPassword' : '/regisPassword',
+        arguments: noTelepon,
+      );
+
+      _noTeleponController.clear();
+    } catch (e) {
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -40,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
         onTap: () {
           FocusScope.of(context).unfocus(); // menyembunyikan keyboard
         },
+
         child: Column(
           children: [
             SizedBox(
@@ -61,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-                      SizedBox(width: 10),
+                      SizedBox(width: 5),
 
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -72,16 +103,42 @@ class _LoginPageState extends State<LoginPage> {
                           minimumSize: const Size(70, 50),
                           padding: EdgeInsets.zero,
                         ),
-                        onPressed: () {},
                         child: const Icon(
                           Icons.arrow_forward_ios_rounded,
                           color: Colors.white,
                         ),
+                        onPressed: () {
+                          if (_noTeleponController.text.isEmpty) {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (context) => YesDialog(
+                                    title: 'Gagal',
+                                    content:
+                                        'Nomor telepon tidak boleh kosong!',
+                                    onYes: () => Navigator.pop(context),
+                                  ),
+                            );
+                          } else if (_noTeleponController.text.length < 10 ||
+                              _noTeleponController.text.length > 13) {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (context) => YesDialog(
+                                    title: 'Gagal',
+                                    content: 'Nomor telepon tidak valid!',
+                                    onYes: () => Navigator.pop(context),
+                                  ),
+                            );
+                          } else {
+                            _checkUserByTelepon();
+                          }
+                        },
                       ),
                     ],
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
 
                   const Center(
                     child: Text(
@@ -94,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
 
                   // Tombol Google
                   OutlinedButton.icon(
@@ -166,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
                         'Kamu seorang pegawai?',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w700,
                           color: Color(0xFF0D47A1),
                         ),
                       ),
