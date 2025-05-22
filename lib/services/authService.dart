@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:trackit_dev/models/customer.dart';
+import 'package:trackit_dev/models/loginPegawaiResp.dart';
 
 class AuthService {
   final String _baseUrl =
-      ' https://c853-120-188-85-186.ngrok-free.app' //harus sering diganti saat deploy menggunakan ngrok
+      'https://7b9f-203-29-27-165.ngrok-free.app' //harus sering diganti saat deploy menggunakan ngrok
               '/trackit/Auth'
           .trim();
 
@@ -25,7 +26,7 @@ class AuthService {
     String noTelepon,
     String pin,
   ) async {
-    final url = Uri.parse('$_baseUrl/login');
+    final url = Uri.parse('$_baseUrl/loginCustomer');
 
     final response = await http.post(
       url,
@@ -36,6 +37,26 @@ class AuthService {
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
       return CustomerModel.fromJson(jsonData[0]);
+    } else {
+      return null;
+    }
+  }
+
+  Future<LoginPegawaiResponse?> getDataLoginPegawai(
+    String email,
+    String password,
+  ) async {
+    final url = Uri.parse('$_baseUrl/loginPegawai');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'email': email, 'password': password}),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      return LoginPegawaiResponse.fromJson(jsonData);
     } else {
       return null;
     }

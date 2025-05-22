@@ -32,7 +32,7 @@ class _LoginPasswordPageState extends State<LoginPasswordPage> {
 
       if (data != null) {
         // Navigasi ke halaman utama jika login berhasil
-        Navigator.pushNamed(context, '/berandaCustomer');
+        Navigator.pushReplacementNamed(context, '/berandaCustomer');
       } else {
         // Tampilkan pesan kesalahan jika login gagal
         showDialog(
@@ -66,7 +66,7 @@ class _LoginPasswordPageState extends State<LoginPasswordPage> {
           child: Column(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.12,
+                height: MediaQuery.of(context).size.height * 0.1,
                 child: Image.asset('assets/images/logo_trackit_hitam.png'),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.04),

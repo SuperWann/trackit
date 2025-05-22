@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trackit_dev/models/customer.dart';
+import 'package:trackit_dev/models/loginPegawaiResp.dart';
 import 'package:trackit_dev/services/authService.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -19,6 +20,14 @@ class AuthProvider with ChangeNotifier {
   Future<void> getDataLoginCustomer(String noTelepon, String pin) async {
     _dataCustomer = await _authService.getDataLoginCustomer(noTelepon, pin);
     print(_dataCustomer);
+    notifyListeners();
+  }
+
+  LoginPegawaiResponse? _dataPegawai;
+  LoginPegawaiResponse? get dataPegawai => _dataPegawai;
+
+  Future<void> getDataLoginPegawai(String email, String password) async {
+    _dataPegawai = await _authService.getDataLoginPegawai(email, password);
     notifyListeners();
   }
 }

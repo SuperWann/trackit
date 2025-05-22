@@ -4,16 +4,16 @@ import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
 import 'package:trackit_dev/widgets/inputForm.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginCustomerPage extends StatefulWidget {
   static const routeName = '/login';
 
-  const LoginPage({super.key});
+  const LoginCustomerPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginCustomerPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginCustomerPage> {
   final TextEditingController _noTeleponController = TextEditingController();
 
   @override
@@ -218,7 +218,9 @@ class _LoginPageState extends State<LoginPage> {
 
                   Center(
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/loginPegawai');
+                      },
                       child: const Text(
                         'Kamu seorang pegawai?',
                         style: TextStyle(

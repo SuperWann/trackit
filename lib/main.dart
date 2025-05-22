@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trackit_dev/pages/admin/berandaAdmin.dart';
 import 'package:trackit_dev/pages/auth/customer/login.dart';
 import 'package:trackit_dev/pages/auth/customer/loginPassword.dart';
 import 'package:trackit_dev/pages/auth/customer/regisPassword.dart';
-import 'package:trackit_dev/pages/customer/beranda.dart';
+import 'package:trackit_dev/pages/auth/pegawai/login.dart';
+import 'package:trackit_dev/pages/customer/berandaCustomer.dart';
 import 'package:trackit_dev/pages/splash/splashScreen.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
 
@@ -25,10 +27,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Splashscreen(),
       routes: {
-        LoginPage.routeName: (context) => LoginPage(),
+        BerandaAdminPage.routeName: (context) => BerandaAdminPage(),
+        LoginPegawaiPage.routeName: (context) => LoginPegawaiPage(),
+        LoginCustomerPage.routeName: (context) => LoginCustomerPage(),
         LoginPasswordPage.routeName: (context) => LoginPasswordPage(),
         RegisPasswordPage.routeName: (context) => RegisPasswordPage(),
-        BerandaPage.routeName: (context) => BerandaPage(),
+        BerandaCustomerPage.routeName: (context) => BerandaCustomerPage(),
       },
     );
   }
