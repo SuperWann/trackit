@@ -5,6 +5,7 @@ class CustomerModel {
   final String pin;
   final String kecamatan;
   final String kabupaten;
+  final String? detailAlamat;
 
   CustomerModel({
     required this.id,
@@ -13,6 +14,7 @@ class CustomerModel {
     required this.pin,
     required this.kecamatan,
     required this.kabupaten,
+    this.detailAlamat,
   });
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) {
@@ -23,9 +25,9 @@ class CustomerModel {
       pin: json['pin'],
       kecamatan: json['kecamatan'],
       kabupaten: json['kabupaten'],
+      detailAlamat: json['detail_alamat'],
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
       'id_customer': id,

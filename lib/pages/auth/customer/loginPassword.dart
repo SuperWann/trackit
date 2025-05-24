@@ -32,7 +32,12 @@ class _LoginPasswordPageState extends State<LoginPasswordPage> {
 
       if (data != null) {
         // Navigasi ke halaman utama jika login berhasil
-        Navigator.pushReplacementNamed(context, '/berandaCustomer');
+        print(provider.dataCustomer);
+        Navigator.pushReplacementNamed(
+          context,
+          '/navbarCustomer',
+          arguments: provider.dataCustomer,
+        );
       } else {
         // Tampilkan pesan kesalahan jika login gagal
         showDialog(
@@ -54,9 +59,11 @@ class _LoginPasswordPageState extends State<LoginPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
+
+    // get arguments dari halaman sebelumnya
     final String noTelepon =
-        ModalRoute.of(context)?.settings.arguments
-            as String; // get arguments dari halaman sebelumnya
+        ModalRoute.of(context)?.settings.arguments as String;
 
     return Scaffold(
       appBar: AppBar(),
@@ -73,6 +80,8 @@ class _LoginPasswordPageState extends State<LoginPasswordPage> {
               PinCodeFields(
                 onComplete: (inputPin) {
                   _loginCustomer(noTelepon, inputPin);
+                  provider.login();
+                  print(provider.isLoggedIn);
                 },
                 autoHideKeyboard: false,
                 length: 6,

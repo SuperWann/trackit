@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 
 class PegawaiModel {
   final int id;
@@ -30,6 +29,5 @@ class PegawaiModel {
       kabupaten: json['kabupaten'],
     );
   }
-
   
 }

@@ -1,12 +1,13 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:trackit_dev/config.dart';
 import 'package:trackit_dev/models/customer.dart';
 import 'package:trackit_dev/models/loginPegawaiResp.dart';
 
 class AuthService {
   final String _baseUrl =
-      'https://7b9f-203-29-27-165.ngrok-free.app' //harus sering diganti saat deploy menggunakan ngrok
+      '${ApiConfig.baseUrl}'
               '/trackit/Auth'
           .trim();
 
@@ -16,10 +17,10 @@ class AuthService {
     if (response.statusCode == 200) {
       print('User ditemukan');
       return true;
-    } else {
-      print('User tidak ditemukan: ${response.statusCode}');
-      return false;
     }
+
+    print('User tidak ditemukan: ${response.statusCode}');
+    return false;
   }
 
   Future<CustomerModel?> getDataLoginCustomer(
