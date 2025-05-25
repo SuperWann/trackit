@@ -5,6 +5,21 @@ class OrderCustomerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Order Customer Page'));
+    return TabBarView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(children: [Text('1')]),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(children: [Text('2')]),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(children: [Text('3')]),
+        ),
+      ],
+    );
   }
 }

@@ -36,7 +36,7 @@ class _LoginPasswordPageState extends State<LoginPasswordPage> {
         Navigator.pushReplacementNamed(
           context,
           '/navbarCustomer',
-          arguments: provider.dataCustomer,
+          arguments: data,
         );
       } else {
         // Tampilkan pesan kesalahan jika login gagal

@@ -112,7 +112,7 @@ class _OrderCustomerFormPageState extends State<OrderCustomerFormPage> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+    // final screenWidth = MediaQuery.of(context).size.width;
 
     final customerProvider = Provider.of<CustomerProvider>(
       context,
@@ -497,6 +497,7 @@ class _OrderCustomerFormPageState extends State<OrderCustomerFormPage> {
                                     dataPenerima['detail_alamat_penerima'],
                                 isAccepted: false,
                                 catatanKurir: _catatanKurirController.text,
+                                createdAt: DateTime.now(),
                               )
                           // customerProvider.createOrder(order!, context)
                           : ScaffoldMessenger.of(context).showSnackBar(

@@ -10,6 +10,7 @@ class OrderCustomerModel {
   final String detailAlamatPenerima;
   final bool isAccepted;
   final String catatanKurir;
+  final DateTime createdAt;
 
   OrderCustomerModel({
     required this.idCustomerOrder,
@@ -23,21 +24,24 @@ class OrderCustomerModel {
     required this.detailAlamatPenerima,
     required this.isAccepted,
     required this.catatanKurir,
+    required this.createdAt,
   });
 
-  factory OrderCustomerModel.fromJson(Map<String, dynamic> json) => OrderCustomerModel(
-    idCustomerOrder: json['id_customer_order'],
-    idJenisPaket: json['id_jenis_paket'],
-    beratPaket: json['berat'],
-    namaPengirim: json['nama_pengirim'],
-    teleponPengirim: json['telepon_pengirim'],
-    detailAlamatPengirim: json['detail_alamat_pengirim'],
-    namaPenerima: json['nama_penerima'],
-    teleponPenerima: json['telepon_penerima'],
-    detailAlamatPenerima: json['detail_alamat_penerima'],
-    isAccepted: json['isAccepted'],
-    catatanKurir: json['catatan_kurir'],
-  );
+  factory OrderCustomerModel.fromJson(Map<String, dynamic> json) =>
+      OrderCustomerModel(
+        idCustomerOrder: json['id_customer_order'],
+        idJenisPaket: json['id_jenis_paket'],
+        beratPaket: json['berat'],
+        namaPengirim: json['nama_pengirim'],
+        teleponPengirim: json['telepon_pengirim'],
+        detailAlamatPengirim: json['detail_alamat_pengirim'],
+        namaPenerima: json['nama_penerima'],
+        teleponPenerima: json['telepon_penerima'],
+        detailAlamatPenerima: json['detail_alamat_penerima'],
+        isAccepted: json['isAccepted'],
+        catatanKurir: json['catatan_kurir'],
+        createdAt: DateTime.parse(json['waktu_order']),
+      );
 
   Map<String, dynamic> toJson() => {
     'id_customer_order': idCustomerOrder,
@@ -51,5 +55,6 @@ class OrderCustomerModel {
     'detail_alamat_penerima': detailAlamatPenerima,
     'isAccepted': isAccepted,
     'catatan_kurir': catatanKurir,
+    'waktu_order': createdAt.toIso8601String(),
   };
 }

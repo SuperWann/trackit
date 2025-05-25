@@ -4,7 +4,6 @@ import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 import 'package:trackit_dev/widgets/button.dart';
 import 'package:trackit_dev/widgets/inputForm.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class DataPenerimaPage extends StatefulWidget {
   Map<String, dynamic> dataPenerima = {};

@@ -5,7 +5,7 @@ import 'package:trackit_dev/pages/customer/berandaCustomer.dart';
 import 'package:trackit_dev/pages/customer/orderCustomer.dart';
 import 'package:trackit_dev/pages/customer/profilCustomer.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
-import 'package:trackit_dev/widgets/dialog.dart';
+import 'package:trackit_dev/widgets/inputForm.dart';
 
 class NavbarCustomer extends StatefulWidget {
   static const routeName = '/navbarCustomer';
@@ -19,7 +19,7 @@ class NavbarCustomer extends StatefulWidget {
 class _NavbarCustomerState extends State<NavbarCustomer> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
+  final List<Widget> _pages = [
     BerandaCustomerPage(),
     OrderCustomerPage(),
     ProfilCustomerPage(),
@@ -73,74 +73,149 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
     final CustomerModel customer =
         ModalRoute.of(context)?.settings.arguments as CustomerModel;
 
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Color(0xFFECF0F1),
+    List<Widget> tabBar = [
+      Text('Semua'),
+      Text('Dalam Perjalanan'),
+      Text('Terkirim'),
+    ];
 
-        appBar: () {
-          switch (_selectedIndex) {
-            case 0:
-              return AppBar(
-                backgroundColor: Colors.white,
-                title: Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: const Text(
-                    'Trackit!',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 24,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: WillPopScope(
+        onWillPop: _onWillPop,
+        child: DefaultTabController(
+          length: tabBar.length,
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: Color(0xFFECF0F1),
+            appBar: () {
+              switch (_selectedIndex) {
+                case 0:
+                  return AppBar(
+                    backgroundColor: Colors.white,
+                    title: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: const Text(
+                        'Trackit!',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 24,
+                        ),
+                      ),
                     ),
-                  ),
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.notifications_none_outlined),
+                        ),
+                      ),
+                    ],
+                    automaticallyImplyLeading: false,
+                  );
+                case 1:
+                  return PreferredSize(
+                    preferredSize: Size.fromHeight(
+                      MediaQuery.of(context).size.height * 0.135,
+                    ),
+                    child: AppBar(
+                      centerTitle: true,
+                      title: Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: SizedBox(
+                          child: TextField(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/lacakResiCustomer',
+                              );
+                            },
+                            decoration: InputDecoration(
+                              fillColor: Color.fromARGB(255, 233, 233, 233),
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              prefixIcon: Icon(Icons.search),
+                              hintText: 'Pencarian Waybill',
+                              hintStyle: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black26,
+                              ),
+                            ),
+                            keyboardType: TextInputType.none,
+                          ),
+                        ),
+                      ),
+                      automaticallyImplyLeading: false,
+                      backgroundColor: Colors.white,
+                      bottom: TabBar(
+                        tabs: tabBar,
+                        dividerColor: Colors.transparent,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicator: UnderlineTabIndicator(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: Color(0xFF1F3A93),
+                            width: 3,
+                          ),
+                        ),
+                        unselectedLabelStyle: TextStyle(
+                          color: Color(0xFFD9D9D9),
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w700,
+                        ),
+                        labelColor: Colors.black,
+                        labelPadding: EdgeInsets.symmetric(vertical: 15),
+                        labelStyle: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  );
+                case 2:
+                  return null;
+              }
+            }(),
+
+            body: _pages[_selectedIndex],
+            bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Colors.white,
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: Color(0xFF1F3A93),
+              unselectedItemColor: Colors.grey,
+              selectedLabelStyle: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w700,
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+              ),
+              showSelectedLabels: true,
+              currentIndex: _selectedIndex,
+              onTap: _onItemTapped,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_rounded),
+                  label: 'Beranda',
                 ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.notifications_none_outlined),
-                    ),
-                  ),
-                ],
-                automaticallyImplyLeading: false,
-              );
-            case 1:
-              return null;
-            case 2:
-              return null;
-          }
-        }(),
-
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Color(0xFF1F3A93),
-          unselectedItemColor: Colors.grey,
-          selectedLabelStyle: TextStyle(
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.w700,
-          ),
-          unselectedLabelStyle: TextStyle(
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.w500,
-          ),
-          showSelectedLabels: true,
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded),
-              label: 'Beranda',
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.my_library_books_outlined),
+                  label: 'Order',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Profil',
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.my_library_books_outlined),
-              label: 'Order',
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-          ],
+          ),
         ),
       ),
     );

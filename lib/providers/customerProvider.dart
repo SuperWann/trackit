@@ -41,6 +41,7 @@ class CustomerProvider with ChangeNotifier {
       }
     } catch (e) {
       Navigator.pop(context);
+      print(e);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Gagal: $e")));
