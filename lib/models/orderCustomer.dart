@@ -1,4 +1,5 @@
 class OrderCustomerModel {
+  final int? idOrder;
   final int idCustomerOrder;
   final int idJenisPaket;
   final double beratPaket;
@@ -13,6 +14,7 @@ class OrderCustomerModel {
   final DateTime createdAt;
 
   OrderCustomerModel({
+    this.idOrder,
     required this.idCustomerOrder,
     required this.idJenisPaket,
     required this.beratPaket,
@@ -29,9 +31,10 @@ class OrderCustomerModel {
 
   factory OrderCustomerModel.fromJson(Map<String, dynamic> json) =>
       OrderCustomerModel(
+        idOrder: json['id_order'],
         idCustomerOrder: json['id_customer_order'],
         idJenisPaket: json['id_jenis_paket'],
-        beratPaket: json['berat'],
+        beratPaket: (json['berat'] as num).toDouble(),
         namaPengirim: json['nama_pengirim'],
         teleponPengirim: json['telepon_pengirim'],
         detailAlamatPengirim: json['detail_alamat_pengirim'],

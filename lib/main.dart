@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trackit_dev/pages/customer/detailOrder.dart';
 import 'package:trackit_dev/pages/splash/splashScreen.dart';
 import 'package:trackit_dev/pages/admin/berandaAdmin.dart';
 import 'package:trackit_dev/pages/auth/login.dart';
@@ -14,18 +15,19 @@ import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/customerProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   final provider = AuthProvider();
   provider.checkLoginStatus();
-  
+
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthProvider()), 
-                  ChangeNotifierProvider(create: (_) => OtherProvider()),
-                  ChangeNotifierProvider(create: (_) => CustomerProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => OtherProvider()),
+        ChangeNotifierProvider(create: (_) => CustomerProvider()),
+      ],
       child: MyApp(),
     ),
   );
@@ -48,6 +50,7 @@ class MyApp extends StatelessWidget {
         RegisPasswordPage.routeName: (context) => RegisPasswordPage(),
         OrderCustomerFormPage.routeName: (context) => OrderCustomerFormPage(),
         LacakResiCustomerPage.routeName: (context) => LacakResiCustomerPage(),
+        DetailOrderPage.routeName: (context) => DetailOrderPage(),
 
         //PEGAWAI
         BerandaAdminPage.routeName: (context) => BerandaAdminPage(),

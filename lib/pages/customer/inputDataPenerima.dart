@@ -67,8 +67,7 @@ class _DataPenerimaPageState extends State<DataPenerimaPage> {
       setState(() {
         dataKecamatan = otherProvider.dataKecamatan;
       });
-
-      print(dataKecamatan);
+      // print(dataKecamatan);
     });
   }
 

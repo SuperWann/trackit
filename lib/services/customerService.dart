@@ -25,4 +25,19 @@ class CustomerService {
 
     throw Exception('Gagal membuat order: ${response.body}');
   }
+
+  Future<List<OrderCustomerModel>>? getDataOrderNotAccepted(int idCustomer) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/DataOrderNotAccepted/$idCustomer'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      print(jsonData);
+
+      return jsonData.map((json) => OrderCustomerModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Gagal mendapatkan data order: ${response.body}');
+    }
+  }
 }

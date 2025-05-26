@@ -24,6 +24,8 @@ class AuthProvider with ChangeNotifier {
     _isLoggedIn = false;
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('isLoggedIn');
+    _dataCustomer = null;
+    print(_dataCustomer);
     notifyListeners();
   }
 
@@ -58,6 +60,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> getDataLoginCustomer(String noTelepon, String pin) async {
     _dataCustomer = await _authService.getDataLoginCustomer(noTelepon, pin);
+    print(_dataCustomer!.id);
     notifyListeners();
   }
 

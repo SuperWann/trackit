@@ -30,7 +30,7 @@ class CustomerProvider with ChangeNotifier {
                 onYes: () => Navigator.pop(context),
               ),
         );
-        Navigator.pop(context);
+        Navigator.pushReplacementNamed(context, '/navbarCustomer');
       } else {
         Navigator.pop(context);
         YesDialog(
@@ -49,5 +49,16 @@ class CustomerProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  List<OrderCustomerModel>? _orderCustomerNotAccepted;
+  List<OrderCustomerModel>? get orderCustomerNotAccepted =>
+      _orderCustomerNotAccepted;
+
+  Future<void> getDataOrderNotAccepted(int idCustomer) async {
+    _orderCustomerNotAccepted = await _customerService.getDataOrderNotAccepted(
+      idCustomer,
+    );
+    notifyListeners();
   }
 }
