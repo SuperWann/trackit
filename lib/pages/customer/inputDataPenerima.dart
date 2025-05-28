@@ -46,28 +46,11 @@ class _DataPenerimaPageState extends State<DataPenerimaPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final otherProvider = Provider.of<OtherProvider>(context, listen: false);
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-      showDialog(
-        context: context,
-        barrierDismissible: false, // Tidak bisa ditutup klik di luar
-        builder: (context) => const Center(child: CircularProgressIndicator()),
-      );
-
-      try {
-        await otherProvider.getAllKecamatan(
-          authProvider.dataCustomer!.kabupaten,
-        ); //await memastikan kamu benar-benar menunggu proses ambil data selesai.
-        Navigator.pop(context);
-      } catch (e) {
-        Navigator.pop(context);
-        print(e);
-      }
 
       setState(() {
         dataKecamatan = otherProvider.dataKecamatan;
       });
-      // print(dataKecamatan);
+      print(dataKecamatan);
     });
   }
 
@@ -117,6 +100,7 @@ class _DataPenerimaPageState extends State<DataPenerimaPage> {
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontFamily: 'Montserrat',
+                  fontSize: 16,
                 ),
               ),
               Container(
@@ -252,7 +236,7 @@ class _DataPenerimaPageState extends State<DataPenerimaPage> {
             onPressed:
                 isComplete()
                     ? () {
-                      Navigator.pop(context,  {
+                      Navigator.pop(context, {
                         'nama_penerima': _namaPenerimaController.text,
                         'telepon_penerima': _teleponPenerimaController.text,
                         'id_kecamatan': selectedKecamatan,

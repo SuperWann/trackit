@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 import 'package:trackit_dev/widgets/button.dart';
 import 'package:trackit_dev/widgets/inputForm.dart';
@@ -46,29 +45,12 @@ class _DataPengirimPageState extends State<DataPengirimPage> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final otherProvider = Provider.of<OtherProvider>(context, listen: false);
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      showDialog(
-        context: context,
-        barrierDismissible: false, // Tidak bisa ditutup klik di luar
-        builder: (context) => const Center(child: CircularProgressIndicator()),
-      );
-
-      try {
-        if (dataKecamatan == null) {
-          await otherProvider.getAllKecamatan(
-            authProvider.dataCustomer!.kabupaten,
-          ); //await memastikan kamu benar-benar menunggu proses ambil data selesai.
-          Navigator.pop(context);
-        }
-      } catch (e) {
-        Navigator.pop(context);
-        print(e);
-      }
 
       setState(() {
         dataKecamatan = otherProvider.dataKecamatan;
       });
-      print(dataKecamatan);
+
+      // print(dataKecamatan);
     });
   }
 
@@ -118,6 +100,7 @@ class _DataPengirimPageState extends State<DataPengirimPage> {
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontFamily: 'Montserrat',
+                  fontSize: 16,
                 ),
               ),
               Container(
@@ -133,7 +116,7 @@ class _DataPengirimPageState extends State<DataPengirimPage> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Text(
-                        "Nama Penerima",
+                        "Nama Pengirim",
                         style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.w700,
@@ -207,6 +190,7 @@ class _DataPengirimPageState extends State<DataPengirimPage> {
                         onChanged: (value) {
                           setState(() {
                             selectedKecamatan = value;
+                            print(selectedKecamatan);
                             namaKecamatan =
                                 dataKecamatan!.firstWhere(
                                   (item) => item['id_kecamatan'] == value,
@@ -261,6 +245,7 @@ class _DataPengirimPageState extends State<DataPengirimPage> {
                         'detail_alamat_pengirim':
                             _detailPengirimController.text,
                       });
+                      print(selectedKecamatan);
                     }
                     : () {
                       ScaffoldMessenger.of(context).showSnackBar(

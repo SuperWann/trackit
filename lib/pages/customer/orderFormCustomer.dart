@@ -42,28 +42,11 @@ class _OrderCustomerFormPageState extends State<OrderCustomerFormPage> {
       _beratController.addListener(() => setState(() {}));
       _catatanKurirController.addListener(() => setState(() {}));
 
-      showDialog(
-        context: context,
-        barrierDismissible: false, // Tidak bisa ditutup klik di luar
-        builder: (context) => const Center(child: CircularProgressIndicator()),
-      );
+      idCustomerOrder = authProvider.dataCustomer!.id;
 
-      try {
-        await otherProvider
-            .getJenisPaket(); //await memastikan kamu benar-benar menunggu proses ambil data selesai.
-
-        idCustomerOrder = authProvider.dataCustomer!.id;
-
-        Navigator.of(context).pop();
-
-        setState(() {
-          jenisPaket = otherProvider.dataJenisPaket;
-        });
-      } catch (e) {
-        Navigator.of(context).pop();
-        print(e);
-      }
-      // print(jenisPaket);
+      setState(() {
+        jenisPaket = otherProvider.dataJenisPaket;
+      });
     });
   }
 
@@ -107,8 +90,6 @@ class _OrderCustomerFormPageState extends State<OrderCustomerFormPage> {
     return dataPengirim['id_kecamatan'] != dataPenerima['id_kecamatan'] &&
         dataPengirim['telepon_pengirim'] != dataPenerima['telepon_penerima'];
   }
-
-  void submit() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -503,12 +484,16 @@ class _OrderCustomerFormPageState extends State<OrderCustomerFormPage> {
                                           dataPengirim['telepon_pengirim'],
                                       detailAlamatPengirim:
                                           dataPengirim['detail_alamat_pengirim'],
+                                      idKecamatanPengirim:
+                                          dataPengirim['id_kecamatan'],
                                       namaPenerima:
                                           dataPenerima['nama_penerima'],
                                       teleponPenerima:
                                           dataPenerima['telepon_penerima'],
                                       detailAlamatPenerima:
                                           dataPenerima['detail_alamat_penerima'],
+                                      idKecamatanPenerima:
+                                          dataPenerima['id_kecamatan'],
                                       isAccepted: false,
                                       catatanKurir:
                                           _catatanKurirController.text,

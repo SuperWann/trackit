@@ -23,5 +23,4 @@ class OtherProvider with ChangeNotifier {
     _dataKecamatan = await _otherService.getAllKecamatan(namaKabupaten);
     notifyListeners();
   }
-
 }

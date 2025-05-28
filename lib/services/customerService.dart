@@ -40,4 +40,13 @@ class CustomerService {
       throw Exception('Gagal mendapatkan data order: ${response.body}');
     }
   }
+
+  Future<bool> cancelOrder(int idOrder) async {
+    final response = await http.delete(Uri.parse('$_baseUrl/CancelOrder/$idOrder'));
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+    throw Exception('Gagal membatalkan order: ${response.body}');
+  }
 }

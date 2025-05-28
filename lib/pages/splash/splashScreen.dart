@@ -11,9 +11,11 @@ class Splashscreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<AuthProvider>(context);
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 1), () {
       // ignore: use_build_context_synchronously
-      provider.isLoggedIn ? Navigator.pushReplacementNamed(context, '/berandaCustomer') : Navigator.pushReplacementNamed(context, '/login');
+      provider.isLoggedIn
+          ? Navigator.pushReplacementNamed(context, '/berandaCustomer')
+          : Navigator.pushReplacementNamed(context, '/login');
     });
 
     return Scaffold(

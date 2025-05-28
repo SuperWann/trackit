@@ -13,7 +13,18 @@ class _LacakResiCustomerPageState extends State<LacakResiCustomerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Color(0xFFECF0F1),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Lacak Resi',
+          style: TextStyle(
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+          ),
+        ),
+      ),
       body: Center(child: Text('Lacak Resi Customer Page')),
     );
   }

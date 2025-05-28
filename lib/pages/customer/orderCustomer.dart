@@ -5,27 +5,34 @@ import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/customerProvider.dart';
 
 class OrderCustomerPage extends StatefulWidget {
-  List<OrderCustomerModel> orders;
+  static const routeName = '/orderCustomer';
 
-  OrderCustomerPage({super.key, required this.orders});
+  OrderCustomerPage({super.key});
 
   @override
   State<OrderCustomerPage> createState() => _OrderCustomerPageState();
 }
 
 class _OrderCustomerPageState extends State<OrderCustomerPage> {
+  List<OrderCustomerModel>? orders;
+
   @override
   void initState() {
     super.initState();
-    final provider = Provider.of<CustomerProvider>(context, listen: false);
-    if (widget.orders.length != provider.orderCustomerNotAccepted!.length) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await provider.orderCustomerNotAccepted;
-        setState(() {
-          widget.orders = provider.orderCustomerNotAccepted!;
-        });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final customerProvider = Provider.of<CustomerProvider>(
+        context,
+        listen: false,
+      );
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+      await customerProvider.getDataOrderNotAccepted(
+        authProvider.dataCustomer!.id,
+      );
+      setState(() {
+        orders = customerProvider.orderCustomerNotAccepted;
       });
-    }
+    });
   }
 
   Future<void> _refreshOrders() async {
@@ -35,7 +42,7 @@ class _OrderCustomerPageState extends State<OrderCustomerPage> {
       await provider.getDataOrderNotAccepted(authProvider.dataCustomer!.id);
       // provider.orderCustomerNotAccepted;
       setState(() {
-        widget.orders = provider.orderCustomerNotAccepted!;
+        orders = provider.orderCustomerNotAccepted!;
       });
     } catch (e) {
       print('Error saat refresh: $e');
@@ -49,26 +56,27 @@ class _OrderCustomerPageState extends State<OrderCustomerPage> {
       children: [
         RefreshIndicator(
           onRefresh: _refreshOrders,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child:
-                widget.orders.isEmpty
-                    ? Center(
-                      child: Text(
-                        'Belum Ada Order',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black38,
-                        ),
+          child:
+              orders == null || orders!.isEmpty
+                  ? Center(
+                    child: Text(
+                      "Belum Ada Order",
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
+                        color: Colors.black26,
                       ),
-                    )
-                    : ListView.separated(
+                    ),
+                  )
+                  : Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: ListView.separated(
                       separatorBuilder:
                           (context, index) => SizedBox(height: 10),
-                      itemCount: widget.orders.length,
+                      itemCount: orders!.length,
                       itemBuilder: (context, index) {
-                        final order = widget.orders[index];
+                        final order = orders![index];
                         return ListTile(
                           onTap: () {
                             Navigator.pushNamed(
@@ -106,7 +114,7 @@ class _OrderCustomerPageState extends State<OrderCustomerPage> {
                         );
                       },
                     ),
-          ),
+                  ),
         ),
         Padding(
           padding: const EdgeInsets.all(20),

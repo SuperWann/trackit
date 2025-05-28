@@ -6,11 +6,13 @@ class OrderCustomerModel {
   final String namaPengirim;
   final String teleponPengirim;
   final String detailAlamatPengirim;
+  final int idKecamatanPengirim;
   final String namaPenerima;
   final String teleponPenerima;
   final String detailAlamatPenerima;
+  final int idKecamatanPenerima;
   final bool isAccepted;
-  final String catatanKurir;
+  final String? catatanKurir;
   final DateTime createdAt;
 
   OrderCustomerModel({
@@ -21,11 +23,13 @@ class OrderCustomerModel {
     required this.namaPengirim,
     required this.teleponPengirim,
     required this.detailAlamatPengirim,
+    required this.idKecamatanPengirim,
     required this.namaPenerima,
     required this.teleponPenerima,
     required this.detailAlamatPenerima,
+    required this.idKecamatanPenerima,
     required this.isAccepted,
-    required this.catatanKurir,
+    this.catatanKurir,
     required this.createdAt,
   });
 
@@ -38,9 +42,11 @@ class OrderCustomerModel {
         namaPengirim: json['nama_pengirim'],
         teleponPengirim: json['telepon_pengirim'],
         detailAlamatPengirim: json['detail_alamat_pengirim'],
+        idKecamatanPengirim: json['id_kecamatan_pengirim'],
         namaPenerima: json['nama_penerima'],
         teleponPenerima: json['telepon_penerima'],
         detailAlamatPenerima: json['detail_alamat_penerima'],
+        idKecamatanPenerima: json['id_kecamatan_penerima'],
         isAccepted: json['isAccepted'],
         catatanKurir: json['catatan_kurir'],
         createdAt: DateTime.parse(json['waktu_order']),
@@ -58,6 +64,8 @@ class OrderCustomerModel {
     'detail_alamat_penerima': detailAlamatPenerima,
     'isAccepted': isAccepted,
     'catatan_kurir': catatanKurir,
+    'id_kecamatan_pengirim': idKecamatanPengirim,
+    'id_kecamatan_penerima': idKecamatanPenerima,
     'waktu_order': createdAt.toIso8601String(),
   };
 }
