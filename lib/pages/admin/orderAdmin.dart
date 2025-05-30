@@ -1,48 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
+import 'package:trackit_dev/providers/adminProvider.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
-import 'package:trackit_dev/providers/customerProvider.dart';
 
-class OrderCustomerPage extends StatefulWidget {
-  static const routeName = '/orderCustomer';
+class OrderAdminPage extends StatefulWidget {
+  static const String routeName = '/orderAdmin';
 
-  OrderCustomerPage({super.key});
+  const OrderAdminPage({super.key});
 
   @override
-  State<OrderCustomerPage> createState() => _OrderCustomerPageState();
+  State<OrderAdminPage> createState() => _OrderAdminPageState();
 }
 
-class _OrderCustomerPageState extends State<OrderCustomerPage> {
+class _OrderAdminPageState extends State<OrderAdminPage> {
   List<OrderCustomerModel>? orders;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final customerProvider = Provider.of<CustomerProvider>(
-        context,
-        listen: false,
-      );
+      final adminProvider = Provider.of<AdminProvider>(context, listen: false);
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-      await customerProvider.getDataOrderNotAccepted(
-        authProvider.dataCustomer!.id,
+      print(authProvider.dataPegawai!.pegawai.id);
+      await adminProvider.getDataOrderNotAcceptedByKecamatan(
+        authProvider.dataPegawai!.pegawai.idKecamatan,
       );
       setState(() {
-        orders = customerProvider.orderCustomerNotAccepted;
+        orders = adminProvider.orderCustomerNotAcceptedByKecamatan;
       });
     });
   }
 
   Future<void> _refreshOrders() async {
     try {
-      final provider = Provider.of<CustomerProvider>(context, listen: false);
+      final adminProvider = Provider.of<AdminProvider>(context, listen: false);
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      await provider.getDataOrderNotAccepted(authProvider.dataCustomer!.id);
+      await adminProvider.getDataOrderNotAcceptedByKecamatan(
+        authProvider.dataPegawai!.pegawai.idKecamatan,
+      );
       // provider.orderCustomerNotAccepted;
       setState(() {
-        orders = provider.orderCustomerNotAccepted!;
+        orders = adminProvider.orderCustomerNotAcceptedByKecamatan!;
       });
     } catch (e) {
       print('Error saat refresh: $e');
@@ -51,7 +50,6 @@ class _OrderCustomerPageState extends State<OrderCustomerPage> {
 
   @override
   Widget build(BuildContext context) {
-    // print(orders[1].idOrder);
     return TabBarView(
       children: [
         RefreshIndicator(
@@ -81,7 +79,7 @@ class _OrderCustomerPageState extends State<OrderCustomerPage> {
                           onTap: () {
                             Navigator.pushNamed(
                               context,
-                              '/detailOrderCustomer',
+                              '/detailOrderAdmin',
                               arguments: order,
                             );
                           },

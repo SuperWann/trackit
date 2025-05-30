@@ -20,7 +20,7 @@ class _LoginPegawaiPageState extends State<LoginPegawaiPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   void _loginPegawai(String email, String password) async {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     String? getPegawaiRole(String token) {
       final payload = Jwt.parseJwt(token);
@@ -34,15 +34,19 @@ class _LoginPegawaiPageState extends State<LoginPegawaiPage> {
     );
 
     try {
-      await provider.getDataLoginPegawai(email, password);
+      await authProvider.getDataLoginPegawai(email, password);
       Navigator.pop(context);
 
-      final data = provider.dataPegawai;
+      final data = authProvider.dataPegawai;
       if (data != null) {
         final pegawaiRole = getPegawaiRole(data.token);
 
         if (pegawaiRole == 'admin') {
-          Navigator.pushReplacementNamed(context, '/berandaAdmin');
+          Navigator.pushReplacementNamed(
+            context,
+            '/navbarAdmin',
+            arguments: data,
+          );
         } else if (pegawaiRole == 'kurir') {
           Navigator.pushReplacementNamed(context, '/berandaKurir');
         }

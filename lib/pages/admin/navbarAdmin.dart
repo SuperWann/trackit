@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trackit_dev/pages/customer/berandaCustomer.dart';
+import 'package:trackit_dev/pages/admin/berandaAdmin.dart';
+import 'package:trackit_dev/pages/admin/orderAdmin.dart';
+import 'package:trackit_dev/pages/admin/profilAdmin.dart';
 import 'package:trackit_dev/pages/customer/orderCustomer.dart';
 import 'package:trackit_dev/pages/customer/profilCustomer.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 
-class NavbarCustomer extends StatefulWidget {
-  static const routeName = '/navbarCustomer';
+class NavbarAdmin extends StatefulWidget {
+  static const routeName = '/navbarAdmin';
 
-  const NavbarCustomer({super.key});
+  const NavbarAdmin({super.key});
 
   @override
-  State<NavbarCustomer> createState() => _NavbarCustomerState();
+  State<NavbarAdmin> createState() => _NavbarAdminState();
 }
 
-class _NavbarCustomerState extends State<NavbarCustomer> {
+class _NavbarAdminState extends State<NavbarAdmin> {
   int _selectedIndex = 0;
   // List<OrderCustomerModel>? orders;
 
@@ -23,10 +25,6 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    // final customerProvider = Provider.of<CustomerProvider>(
-    //   context,
-    //   listen: false,
-    // );
     final otherProvider = Provider.of<OtherProvider>(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -37,22 +35,15 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
       );
 
       try {
-        // await customerProvider.getDataOrderNotAccepted(
-        //   authProvider.dataCustomer!.id,
-        // );
         await otherProvider.getJenisPaket();
         await otherProvider.getAllKecamatan(
-          authProvider.dataCustomer!.kabupaten,
+          authProvider.dataPegawai!.pegawai.kabupaten,
         );
         Navigator.pop(context);
       } catch (e) {
         Navigator.pop(context);
         print(e);
       }
-
-      // setState(() {
-      //   orders = customerProvider.orderCustomerNotAccepted;
-      // });
     });
   }
 
@@ -105,15 +96,15 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
     //     ModalRoute.of(context)?.settings.arguments as CustomerModel;
 
     List<Widget> _pages = [
-      BerandaCustomerPage(),
-      OrderCustomerPage(),
-      ProfilCustomerPage(),
+      BerandaAdminPage(),
+      OrderAdminPage(),
+      ProfilAdminPage(),
     ];
 
     List<Widget> tabBar = [
       Text('Menunggu'),
-      Text('Perjalanan'),
-      Text('Terkirim'),
+      Text('Di Gudang'),
+      Text('Selesai'),
     ];
 
     return GestureDetector(

@@ -4,6 +4,7 @@ import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
 
 class ProfilCustomerPage extends StatelessWidget {
+  static const String routeName = '/profilCustomer';
   const ProfilCustomerPage({super.key});
 
   @override

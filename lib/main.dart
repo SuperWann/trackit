@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trackit_dev/pages/customer/detailOrder.dart';
+import 'package:trackit_dev/pages/admin/detailOrderMenungguAdmin.dart';
+import 'package:trackit_dev/pages/admin/navbarAdmin.dart';
+import 'package:trackit_dev/pages/customer/detailOrderMenungguCustomer.dart';
+import 'package:trackit_dev/pages/customer/profilCustomer.dart';
 import 'package:trackit_dev/pages/splash/splashScreen.dart';
 import 'package:trackit_dev/pages/admin/berandaAdmin.dart';
 import 'package:trackit_dev/pages/auth/login.dart';
@@ -11,6 +14,7 @@ import 'package:trackit_dev/pages/customer/berandaCustomer.dart';
 import 'package:trackit_dev/pages/customer/lacakResiCustomer.dart';
 import 'package:trackit_dev/pages/customer/navbarCustomer.dart';
 import 'package:trackit_dev/pages/customer/orderFormCustomer.dart';
+import 'package:trackit_dev/providers/adminProvider.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/customerProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
@@ -27,6 +31,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => OtherProvider()),
         ChangeNotifierProvider(create: (_) => CustomerProvider()),
+        ChangeNotifierProvider(create: (_) => AdminProvider()),
       ],
       child: MyApp(),
     ),
@@ -50,11 +55,18 @@ class MyApp extends StatelessWidget {
         RegisPasswordPage.routeName: (context) => RegisPasswordPage(),
         OrderCustomerFormPage.routeName: (context) => OrderCustomerFormPage(),
         LacakResiCustomerPage.routeName: (context) => LacakResiCustomerPage(),
-        DetailOrderPage.routeName: (context) => DetailOrderPage(),
+        DetailOrderMenungguCustomerPage.routeName: (context) => DetailOrderMenungguCustomerPage(),
+        ProfilCustomerPage.routeName: (context) => ProfilCustomerPage(),
 
         //PEGAWAI
-        BerandaAdminPage.routeName: (context) => BerandaAdminPage(),
         LoginPegawaiPage.routeName: (context) => LoginPegawaiPage(),
+
+        //ADMIN
+        NavbarAdmin.routeName: (context) => NavbarAdmin(),
+        BerandaAdminPage.routeName: (context) => BerandaAdminPage(),
+        DetailOrderMenungguAdminPage.routeName: (context) => DetailOrderMenungguAdminPage(),
+
+        //KURIR
       },
     );
   }
