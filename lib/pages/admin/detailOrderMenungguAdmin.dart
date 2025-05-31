@@ -5,6 +5,7 @@ import 'package:trackit_dev/models/kurir.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
 import 'package:trackit_dev/models/prosesOrderCustomer.dart';
 import 'package:trackit_dev/providers/adminProvider.dart';
+import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/kurirProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 import 'package:trackit_dev/widgets/button.dart';
@@ -79,6 +80,7 @@ class _DetailOrderMenungguAdminPageState
     final OrderCustomerModel order =
         ModalRoute.of(context)?.settings.arguments as OrderCustomerModel;
 
+    final authProvider = Provider.of<AuthProvider>(context);
     final adminProvider = Provider.of<AdminProvider>(context);
     final otherProvider = Provider.of<OtherProvider>(context);
     final dataJenisPaket = otherProvider.dataJenisPaket!;
@@ -336,6 +338,9 @@ class _DetailOrderMenungguAdminPageState
                               noResi: generateResiWithDateTime(),
                               idOrder: order.idOrder!,
                               idKurir: idSelectedKurir!,
+                              deskripsi:
+                                  "Bararng telah diterima oleh: Agen kecamatan ${authProvider.dataPegawai!.pegawai.kecamatan} untuk diproses.",
+                              tanggalProses: DateTime.now(),
                             );
                             await adminProvider.acceptOrder(
                               context,

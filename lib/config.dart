@@ -1,3 +1,3 @@
 class ApiConfig {
-  static const String baseUrl = 'https://4372-103-156-141-228.ngrok-free.app';
+  static const String baseUrl = 'https://e2a7-110-136-125-237.ngrok-free.app';
 }
