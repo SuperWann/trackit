@@ -6,6 +6,7 @@ import 'package:trackit_dev/pages/admin/profilAdmin.dart';
 import 'package:trackit_dev/pages/customer/orderCustomer.dart';
 import 'package:trackit_dev/pages/customer/profilCustomer.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
+import 'package:trackit_dev/providers/kurirProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 
 class NavbarAdmin extends StatefulWidget {
@@ -26,6 +27,7 @@ class _NavbarAdminState extends State<NavbarAdmin> {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final otherProvider = Provider.of<OtherProvider>(context, listen: false);
+    final kurirProvider = Provider.of<KurirProvider>(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showDialog(
@@ -39,6 +41,8 @@ class _NavbarAdminState extends State<NavbarAdmin> {
         await otherProvider.getAllKecamatan(
           authProvider.dataPegawai!.pegawai.kabupaten,
         );
+        await kurirProvider.getDataKurir();
+        print(kurirProvider.kurir!.length);
         Navigator.pop(context);
       } catch (e) {
         Navigator.pop(context);
@@ -102,8 +106,8 @@ class _NavbarAdminState extends State<NavbarAdmin> {
     ];
 
     List<Widget> tabBar = [
-      Text('Menunggu'),
-      Text('Di Gudang'),
+      Text('Belum Di Gudang'),
+      Text('Proses'),
       Text('Selesai'),
     ];
 

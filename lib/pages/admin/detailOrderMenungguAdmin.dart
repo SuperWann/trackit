@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:trackit_dev/models/kurir.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
-import 'package:trackit_dev/providers/customerProvider.dart';
+import 'package:trackit_dev/models/prosesOrderCustomer.dart';
+import 'package:trackit_dev/providers/adminProvider.dart';
+import 'package:trackit_dev/providers/kurirProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 import 'package:trackit_dev/widgets/button.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
@@ -18,6 +22,25 @@ class DetailOrderMenungguAdminPage extends StatefulWidget {
 
 class _DetailOrderMenungguAdminPageState
     extends State<DetailOrderMenungguAdminPage> {
+  List<KurirModel>? kurirs;
+
+  ProsesOrderCustomerModel? prosesOrder;
+  int? idSelectedKurir;
+  int? idKecamatanKurir;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final kurirProvider = Provider.of<KurirProvider>(context, listen: false);
+
+      await kurirProvider.getDataKurir();
+      setState(() {
+        kurirs = kurirProvider.kurir;
+      });
+    });
+  }
+
   Widget rowData(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -56,6 +79,7 @@ class _DetailOrderMenungguAdminPageState
     final OrderCustomerModel order =
         ModalRoute.of(context)?.settings.arguments as OrderCustomerModel;
 
+    final adminProvider = Provider.of<AdminProvider>(context);
     final otherProvider = Provider.of<OtherProvider>(context);
     final dataJenisPaket = otherProvider.dataJenisPaket!;
     final dataKecamatan = otherProvider.dataKecamatan!;
@@ -82,6 +106,21 @@ class _DetailOrderMenungguAdminPageState
       } else {
         return '-';
       }
+    }
+
+    String generateResiWithDateTime() {
+      final prefix = "TRCKIT";
+      final now = DateTime.now();
+
+      String dateTimePart =
+          '${now.year.toString().padLeft(4, '0')}'
+          '${now.month.toString().padLeft(2, '0')}'
+          '${now.day.toString().padLeft(2, '0')}'
+          '${now.hour.toString().padLeft(2, '0')}'
+          '${now.minute.toString().padLeft(2, '0')}'
+          '${now.second.toString().padLeft(2, '0')}';
+
+      return prefix + dateTimePart;
     }
 
     return Scaffold(
@@ -202,24 +241,111 @@ class _DetailOrderMenungguAdminPageState
               ),
             ),
             SizedBox(height: 20),
+            Text(
+              "Kurir Pengirim",
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Montserrat',
+                fontSize: 16,
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white, // Warna background tombol Dropdown
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: DropdownButton<int>(
+                dropdownColor: Colors.white,
+                padding: EdgeInsets.only(right: 10, left: 10),
+                isExpanded: true,
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+                underline: Container(),
+                disabledHint: const Text(
+                  'Kurir',
+                  style: TextStyle(
+                    color: Colors.black12,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                value: idSelectedKurir,
+                hint: const Text(
+                  'Pilih kurir pengirim',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                items:
+                    kurirs == null
+                        ? []
+                        : kurirs!
+                            .map(
+                              (kurir) => DropdownMenuItem<int>(
+                                value: kurir.idKurir,
+                                child: Text(kurir.nama),
+                              ),
+                            )
+                            .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    idSelectedKurir = value;
+                    idKecamatanKurir =
+                        kurirs!
+                            .firstWhere(
+                              (kurir) => kurir.idKurir == idSelectedKurir,
+                            )
+                            .idKecamatan;
+                  });
+                },
+              ),
+            ),
+            SizedBox(height: 20),
             LongButton(
               text: "Proses Order   ->",
               color: "#1F3A93",
               colorText: "#FFFFFF",
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder:
-                      (context) => YesNoDialog(
-                        title: "Konfirmasi",
-                        content:
-                            "Apakah Anda yakin ingin memproses order? pastikan customer mendatangi gudang Anda!",
-                        onYes: () async {
-                          Navigator.pop(context);
-                        },
-                        onNo: () => Navigator.pop(context),
-                      ),
-                );
+                if (idSelectedKurir == null) {
+                  Fluttertoast.showToast(
+                    msg: "Mohon pilih kurir terlebih dahulu",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Color(0xFFC5172E),
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                    fontAsset: 'assets/fonts/Montserrat-Medium.ttf',
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) => YesNoDialog(
+                          title: "Konfirmasi",
+                          content:
+                              "Apakah anda yakin ingin memproses order? Pastikan customer telah memberikan barang ke gudang",
+                          onYes: () async {
+                            prosesOrder = ProsesOrderCustomerModel(
+                              noResi: generateResiWithDateTime(),
+                              idOrder: order.idOrder!,
+                              idKurir: idSelectedKurir!,
+                            );
+                            await adminProvider.acceptOrder(
+                              context,
+                              prosesOrder!,
+                            );
+                          },
+                          onNo: () => Navigator.pop(context),
+                        ),
+                  );
+                }
               },
             ),
           ],

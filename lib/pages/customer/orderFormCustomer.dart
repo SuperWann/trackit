@@ -365,7 +365,6 @@ class _OrderCustomerFormPageState extends State<OrderCustomerFormPage> {
                                         onChanged: (value) {
                                           setState(() {
                                             selectedJenisPaket = value;
-                                            print(selectedJenisPaket);
                                           });
                                         },
                                       ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:trackit_dev/config.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
+import 'package:trackit_dev/models/prosesOrderCustomer.dart';
 
 class AdminService {
   final String _baseUrl =
@@ -24,4 +25,19 @@ class AdminService {
       throw Exception('Gagal mendapatkan data order: ${response.body}');
     }
   }
+
+  Future<bool> acceptOrder(ProsesOrderCustomerModel prosesOrder) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/AcceptOrder'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(prosesOrder.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+
+    throw Exception('Gagal accept order: ${response.body}!');
+  }
+
 }

@@ -43,7 +43,7 @@ class AuthService {
     }
   }
 
-  Future<LoginPegawaiResponse?> getDataLoginPegawai(
+  Future<LoginPegawaiResponseModel?> getDataLoginPegawai(
     String email,
     String password,
   ) async {
@@ -57,7 +57,7 @@ class AuthService {
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      return LoginPegawaiResponse.fromJson(jsonData);
+      return LoginPegawaiResponseModel.fromJson(jsonData);
     } else {
       return null;
     }

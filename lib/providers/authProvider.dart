@@ -66,8 +66,8 @@ class AuthProvider with ChangeNotifier {
 
   //======================================================================= GET DATA PEGAWAI LOGIN
 
-  LoginPegawaiResponse? _dataPegawai;
-  LoginPegawaiResponse? get dataPegawai => _dataPegawai;
+  LoginPegawaiResponseModel? _dataPegawai;
+  LoginPegawaiResponseModel? get dataPegawai => _dataPegawai;
 
   Future<void> getDataLoginPegawai(String email, String password) async {
     _dataPegawai = await _authService.getDataLoginPegawai(email, password);

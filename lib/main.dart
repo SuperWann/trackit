@@ -17,6 +17,7 @@ import 'package:trackit_dev/pages/customer/orderFormCustomer.dart';
 import 'package:trackit_dev/providers/adminProvider.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/customerProvider.dart';
+import 'package:trackit_dev/providers/kurirProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 
 void main() {
@@ -32,6 +33,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => OtherProvider()),
         ChangeNotifierProvider(create: (_) => CustomerProvider()),
         ChangeNotifierProvider(create: (_) => AdminProvider()),
+        ChangeNotifierProvider(create: (_) => KurirProvider()),
       ],
       child: MyApp(),
     ),

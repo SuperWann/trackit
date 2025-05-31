@@ -1,16 +1,16 @@
 import 'package:trackit_dev/models/pegawai.dart';
 
-class LoginPegawaiResponse {
+class LoginPegawaiResponseModel {
   final String token;
   final PegawaiModel pegawai;
 
-  LoginPegawaiResponse({
+  LoginPegawaiResponseModel({
     required this.token,
     required this.pegawai,
   });
 
-  factory LoginPegawaiResponse.fromJson(Map<String, dynamic> json) {
-    return LoginPegawaiResponse(
+  factory LoginPegawaiResponseModel.fromJson(Map<String, dynamic> json) {
+    return LoginPegawaiResponseModel(
       token: json['token'],
       pegawai: PegawaiModel.fromJson(json['pegawai']),
     );

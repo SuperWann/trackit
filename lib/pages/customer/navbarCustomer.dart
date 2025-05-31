@@ -37,9 +37,6 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
       );
 
       try {
-        // await customerProvider.getDataOrderNotAccepted(
-        //   authProvider.dataCustomer!.id,
-        // );
         await otherProvider.getJenisPaket();
         await otherProvider.getAllKecamatan(
           authProvider.dataCustomer!.kabupaten,
@@ -49,10 +46,6 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
         Navigator.pop(context);
         print(e);
       }
-
-      // setState(() {
-      //   orders = customerProvider.orderCustomerNotAccepted;
-      // });
     });
   }
 
@@ -111,8 +104,8 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
     ];
 
     List<Widget> tabBar = [
-      Text('Menunggu'),
-      Text('Perjalanan'),
+      Text('Belum Di Gudang'),
+      Text('Diproses'),
       Text('Terkirim'),
     ];
 
