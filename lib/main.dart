@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trackit_dev/pages/admin/detailOrderMenungguAdmin.dart';
+import 'package:trackit_dev/pages/admin/detailOrderProcessedAdmin.dart';
 import 'package:trackit_dev/pages/admin/navbarAdmin.dart';
 import 'package:trackit_dev/pages/customer/detailOrderMenungguCustomer.dart';
 import 'package:trackit_dev/pages/customer/profilCustomer.dart';
@@ -57,7 +58,8 @@ class MyApp extends StatelessWidget {
         RegisPasswordPage.routeName: (context) => RegisPasswordPage(),
         OrderCustomerFormPage.routeName: (context) => OrderCustomerFormPage(),
         LacakResiCustomerPage.routeName: (context) => LacakResiCustomerPage(),
-        DetailOrderMenungguCustomerPage.routeName: (context) => DetailOrderMenungguCustomerPage(),
+        DetailOrderMenungguCustomerPage.routeName:
+            (context) => DetailOrderMenungguCustomerPage(),
         ProfilCustomerPage.routeName: (context) => ProfilCustomerPage(),
 
         //PEGAWAI
@@ -66,7 +68,10 @@ class MyApp extends StatelessWidget {
         //ADMIN
         NavbarAdmin.routeName: (context) => NavbarAdmin(),
         BerandaAdminPage.routeName: (context) => BerandaAdminPage(),
-        DetailOrderMenungguAdminPage.routeName: (context) => DetailOrderMenungguAdminPage(),
+        DetailOrderMenungguAdminPage.routeName:
+            (context) => DetailOrderMenungguAdminPage(),
+        DetailOrderProcessedAdminPage.routeName:
+            (context) => DetailOrderProcessedAdminPage(),
 
         //KURIR
       },

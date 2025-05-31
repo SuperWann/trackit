@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
+import 'package:trackit_dev/models/orderCustomerProcessed.dart';
 import 'package:trackit_dev/models/prosesOrderCustomer.dart';
 import 'package:trackit_dev/services/adminService.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
@@ -14,6 +15,26 @@ class AdminProvider with ChangeNotifier {
   Future<void> getDataOrderNotAcceptedByKecamatan(int idKecamatan) async {
     _orderCustomerNotAcceptedByKecamatan = await _adminService
         .getDataOrderNotAcceptedByKecamatan(idKecamatan);
+    notifyListeners();
+  }
+
+  List<OrderCustomerProcessedModel>? _orderCustomerProcessedDigudang;
+  List<OrderCustomerProcessedModel>? get orderCustomerProcessedDigudang =>
+      _orderCustomerProcessedDigudang;
+      
+  Future<void> getDataOrderProcessedDigudang(int idKecamatan, int idStatus) async {
+    _orderCustomerProcessedDigudang = await _adminService
+        .getDataOrderProcessedByKecamatanPengirim(idKecamatan, idStatus);
+    notifyListeners();
+  }
+
+  List<OrderCustomerProcessedModel>? _orderCustomerProcessedDiantar;
+  List<OrderCustomerProcessedModel>? get orderCustomerProcessedDiantar =>
+      _orderCustomerProcessedDiantar;
+
+  Future<void> getDataOrderProcessedDiantar(int idKecamatan, int idStatus) async {
+    _orderCustomerProcessedDiantar = await _adminService
+        .getDataOrderProcessedByKecamatanPengirim(idKecamatan, idStatus);
     notifyListeners();
   }
 

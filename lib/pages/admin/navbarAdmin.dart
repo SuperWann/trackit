@@ -5,6 +5,7 @@ import 'package:trackit_dev/pages/admin/orderAdmin.dart';
 import 'package:trackit_dev/pages/admin/profilAdmin.dart';
 import 'package:trackit_dev/pages/customer/orderCustomer.dart';
 import 'package:trackit_dev/pages/customer/profilCustomer.dart';
+import 'package:trackit_dev/providers/adminProvider.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/kurirProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
@@ -28,6 +29,7 @@ class _NavbarAdminState extends State<NavbarAdmin> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final otherProvider = Provider.of<OtherProvider>(context, listen: false);
     final kurirProvider = Provider.of<KurirProvider>(context, listen: false);
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showDialog(
@@ -37,12 +39,24 @@ class _NavbarAdminState extends State<NavbarAdmin> {
       );
 
       try {
+        await adminProvider.getDataOrderNotAcceptedByKecamatan(
+          authProvider.dataPegawai!.pegawai.idKecamatan,
+        );
+        await adminProvider.getDataOrderProcessedDigudang(
+          authProvider.dataPegawai!.pegawai.idKecamatan,
+          1,
+        );
+        await adminProvider.getDataOrderProcessedDiantar(
+          authProvider.dataPegawai!.pegawai.idKecamatan,
+          2,
+        );
         await otherProvider.getJenisPaket();
         await otherProvider.getAllKecamatan(
           authProvider.dataPegawai!.pegawai.kabupaten,
         );
         await kurirProvider.getDataKurir();
-        print(kurirProvider.kurir!.length);
+        print(adminProvider.orderCustomerProcessedDigudang!);
+        // print(kurirProvider.kurir!.length);
         Navigator.pop(context);
       } catch (e) {
         Navigator.pop(context);

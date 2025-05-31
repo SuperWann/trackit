@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:trackit_dev/models/kurir.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
+import 'package:trackit_dev/models/orderCustomerProcessed.dart';
 import 'package:trackit_dev/models/prosesOrderCustomer.dart';
 import 'package:trackit_dev/providers/adminProvider.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
@@ -11,18 +12,18 @@ import 'package:trackit_dev/providers/otherProvider.dart';
 import 'package:trackit_dev/widgets/button.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
 
-class DetailOrderMenungguAdminPage extends StatefulWidget {
-  static const String routeName = '/detailOrderAdmin';
+class DetailOrderProcessedAdminPage extends StatefulWidget {
+  static const String routeName = '/detailOrderProcessedAdmin';
 
-  const DetailOrderMenungguAdminPage({super.key});
+  const DetailOrderProcessedAdminPage({super.key});
 
   @override
-  State<DetailOrderMenungguAdminPage> createState() =>
-      _DetailOrderMenungguAdminPageState();
+  State<DetailOrderProcessedAdminPage> createState() =>
+      _DetailOrderProcessedAdminPageState();
 }
 
-class _DetailOrderMenungguAdminPageState
-    extends State<DetailOrderMenungguAdminPage> {
+class _DetailOrderProcessedAdminPageState
+    extends State<DetailOrderProcessedAdminPage> {
   List<KurirModel>? kurirs;
 
   ProsesOrderCustomerModel? prosesOrder;
@@ -34,18 +35,10 @@ class _DetailOrderMenungguAdminPageState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final kurirProvider = Provider.of<KurirProvider>(context, listen: false);
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
       await kurirProvider.getDataKurir();
       setState(() {
-        kurirs =
-            kurirProvider.kurir
-                ?.where(
-                  (kurir) =>
-                      kurir.idKecamatan ==
-                      authProvider.dataPegawai!.pegawai.idKecamatan,
-                )
-                .toList();
+        kurirs = kurirProvider.kurir;
       });
     });
   }
@@ -85,8 +78,9 @@ class _DetailOrderMenungguAdminPageState
 
   @override
   Widget build(BuildContext context) {
-    final OrderCustomerModel order =
-        ModalRoute.of(context)?.settings.arguments as OrderCustomerModel;
+    final OrderCustomerProcessedModel order =
+        ModalRoute.of(context)?.settings.arguments
+            as OrderCustomerProcessedModel;
 
     final authProvider = Provider.of<AuthProvider>(context);
     final adminProvider = Provider.of<AdminProvider>(context);
@@ -261,59 +255,15 @@ class _DetailOrderMenungguAdminPageState
             ),
             Container(
               margin: const EdgeInsets.only(top: 10),
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white, // Warna background tombol Dropdown
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: DropdownButton<int>(
-                dropdownColor: Colors.white,
-                padding: EdgeInsets.only(right: 10, left: 10),
-                isExpanded: true,
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-                underline: Container(),
-                disabledHint: const Text(
-                  'Kurir',
-                  style: TextStyle(
-                    color: Colors.black12,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                value: idSelectedKurir,
-                hint: const Text(
-                  'Pilih kurir pengirim',
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                items:
-                    kurirs == null
-                        ? []
-                        : kurirs!
-                            .map(
-                              (kurir) => DropdownMenuItem<int>(
-                                value: kurir.idKurir,
-                                child: Text(kurir.nama),
-                              ),
-                            )
-                            .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    idSelectedKurir = value;
-                    idKecamatanKurir =
-                        kurirs!
-                            .firstWhere(
-                              (kurir) => kurir.idKurir == idSelectedKurir,
-                            )
-                            .idKecamatan;
-                  });
-                },
+              child: Material(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                child: Column(children: [rowData('Nama', order.namaKurir)]),
               ),
             ),
             SizedBox(height: 20),

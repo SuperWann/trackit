@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:trackit_dev/config.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
+import 'package:trackit_dev/models/orderCustomerProcessed.dart';
 import 'package:trackit_dev/models/prosesOrderCustomer.dart';
 
 class AdminService {
@@ -23,6 +24,19 @@ class AdminService {
       return jsonData.map((json) => OrderCustomerModel.fromJson(json)).toList();
     } else {
       throw Exception('Gagal mendapatkan data order: ${response.body}');
+    }
+  }
+
+  Future<List<OrderCustomerProcessedModel>>? getDataOrderProcessedByKecamatanPengirim(int idKecamatan, int idStatus) async {
+    final reponse = await http.get(
+      Uri.parse('$_baseUrl/DataOrderProcessedByKecamatanPengirim/$idKecamatan/$idStatus'),
+    );
+
+    if (reponse.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(reponse.body);
+      return jsonData.map((json) => OrderCustomerProcessedModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Gagal mendapatkan data order: ${reponse.body}');
     }
   }
 
