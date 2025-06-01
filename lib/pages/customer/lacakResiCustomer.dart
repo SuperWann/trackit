@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:trackit_dev/widgets/inputForm.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LacakResiCustomerPage extends StatefulWidget {
   static const routeName = '/lacakResiCustomer';
@@ -45,12 +41,12 @@ class _LacakResiCustomerPageState extends State<LacakResiCustomerPage> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: Colors.grey,
-                    child: Center(child: Text("map placeholder")),
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/login_img.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 Padding(
