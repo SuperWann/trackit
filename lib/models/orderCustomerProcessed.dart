@@ -1,5 +1,6 @@
 class OrderCustomerProcessedModel {
   final int? idOrder;
+  final String noResi;
   final int idCustomerOrder;
   final int idJenisPaket;
   final int idStatusPaket;
@@ -19,6 +20,7 @@ class OrderCustomerProcessedModel {
 
   OrderCustomerProcessedModel({
     this.idOrder,
+    required this.noResi,
     required this.idCustomerOrder,
     required this.idJenisPaket,
     required this.idStatusPaket,
@@ -40,6 +42,7 @@ class OrderCustomerProcessedModel {
   factory OrderCustomerProcessedModel.fromJson(Map<String, dynamic> json) =>
       OrderCustomerProcessedModel(
         idOrder: json['id_order'],
+        noResi: json['no_resi'],
         idCustomerOrder: json['id_customer_order'],
         idJenisPaket: json['id_jenis_paket'],
         idStatusPaket: json['id_status_paket'],

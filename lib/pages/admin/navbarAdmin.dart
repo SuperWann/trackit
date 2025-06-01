@@ -3,8 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:trackit_dev/pages/admin/berandaAdmin.dart';
 import 'package:trackit_dev/pages/admin/orderAdmin.dart';
 import 'package:trackit_dev/pages/admin/profilAdmin.dart';
-import 'package:trackit_dev/pages/customer/orderCustomer.dart';
-import 'package:trackit_dev/pages/customer/profilCustomer.dart';
 import 'package:trackit_dev/providers/adminProvider.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/kurirProvider.dart';

@@ -24,10 +24,6 @@ class _OrderAdminPageState extends State<OrderAdminPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final adminProvider = Provider.of<AdminProvider>(context, listen: false);
-      print(adminProvider.orderCustomerProcessedByKecamatan!.length);
-      // await adminProvider.getDataOrderNotAcceptedByKecamatan(
-      //   authProvider.dataPegawai!.pegawai.idKecamatan,
-      // );
       setState(() {
         orders = adminProvider.orderCustomerNotAcceptedByKecamatan;
         ordersDigudang =
