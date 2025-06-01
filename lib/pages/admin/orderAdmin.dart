@@ -24,16 +24,20 @@ class _OrderAdminPageState extends State<OrderAdminPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final adminProvider = Provider.of<AdminProvider>(context, listen: false);
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      // print(authProvider.dataPegawai!.pegawai.id);
-      print(adminProvider.orderCustomerProcessedDigudang!.length);
+      print(adminProvider.orderCustomerProcessedByKecamatan!.length);
       // await adminProvider.getDataOrderNotAcceptedByKecamatan(
       //   authProvider.dataPegawai!.pegawai.idKecamatan,
       // );
       setState(() {
         orders = adminProvider.orderCustomerNotAcceptedByKecamatan;
-        ordersDigudang = adminProvider.orderCustomerProcessedDigudang;
-        ordersDiantar = adminProvider.orderCustomerProcessedDiantar;
+        ordersDigudang =
+            adminProvider.orderCustomerProcessedByKecamatan!
+                .where((order) => order.idStatusPaket == 1)
+                .toList();
+        ordersDiantar =
+            adminProvider.orderCustomerProcessedByKecamatan!
+                .where((order) => order.idStatusPaket == 2)
+                .toList();
       });
     });
   }
@@ -45,19 +49,13 @@ class _OrderAdminPageState extends State<OrderAdminPage> {
       await adminProvider.getDataOrderNotAcceptedByKecamatan(
         authProvider.dataPegawai!.pegawai.idKecamatan,
       );
-      await adminProvider.getDataOrderProcessedDigudang(
+      await adminProvider.getDataOrderProcessedByKecamatan(
         authProvider.dataPegawai!.pegawai.idKecamatan,
-        1,
       );
-      await adminProvider.getDataOrderProcessedDiantar(
-        authProvider.dataPegawai!.pegawai.idKecamatan,
-        2,
-      );
-      // provider.orderCustomerNotAccepted;
       setState(() {
         orders = adminProvider.orderCustomerNotAcceptedByKecamatan!;
-        ordersDigudang = adminProvider.orderCustomerProcessedDigudang;
-        ordersDiantar = adminProvider.orderCustomerProcessedDiantar;
+        ordersDigudang = adminProvider.orderCustomerProcessedByKecamatan;
+        ordersDiantar = adminProvider.orderCustomerProcessedByKecamatan;
       });
     } catch (e) {
       print('Error saat refresh: $e');

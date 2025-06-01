@@ -21,6 +21,8 @@ class NavbarAdmin extends StatefulWidget {
 
 class _NavbarAdminState extends State<NavbarAdmin> {
   int _selectedIndex = 0;
+  int diGudang = 1;
+  int diAntar = 2;
   // List<OrderCustomerModel>? orders;
 
   @override
@@ -30,6 +32,7 @@ class _NavbarAdminState extends State<NavbarAdmin> {
     final otherProvider = Provider.of<OtherProvider>(context, listen: false);
     final kurirProvider = Provider.of<KurirProvider>(context, listen: false);
     final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    final idKecamatan = authProvider.dataPegawai!.pegawai.idKecamatan;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showDialog(
@@ -40,23 +43,17 @@ class _NavbarAdminState extends State<NavbarAdmin> {
 
       try {
         await adminProvider.getDataOrderNotAcceptedByKecamatan(
-          authProvider.dataPegawai!.pegawai.idKecamatan,
+          idKecamatan,
         );
-        await adminProvider.getDataOrderProcessedDigudang(
-          authProvider.dataPegawai!.pegawai.idKecamatan,
-          1,
-        );
-        await adminProvider.getDataOrderProcessedDiantar(
-          authProvider.dataPegawai!.pegawai.idKecamatan,
-          2,
+        await adminProvider.getDataOrderProcessedByKecamatan(
+          idKecamatan,
         );
         await otherProvider.getJenisPaket();
         await otherProvider.getAllKecamatan(
           authProvider.dataPegawai!.pegawai.kabupaten,
         );
         await kurirProvider.getDataKurir();
-        print(adminProvider.orderCustomerProcessedDigudang!);
-        // print(kurirProvider.kurir!.length);
+        
         Navigator.pop(context);
       } catch (e) {
         Navigator.pop(context);
@@ -120,7 +117,7 @@ class _NavbarAdminState extends State<NavbarAdmin> {
     ];
 
     List<Widget> tabBar = [
-      Text('Belum Di Gudang'),
+      Text('Belum\nDi Gudang', textAlign: TextAlign.center),
       Text('Proses'),
       Text('Selesai'),
     ];

@@ -18,23 +18,13 @@ class AdminProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<OrderCustomerProcessedModel>? _orderCustomerProcessedDigudang;
-  List<OrderCustomerProcessedModel>? get orderCustomerProcessedDigudang =>
-      _orderCustomerProcessedDigudang;
-      
-  Future<void> getDataOrderProcessedDigudang(int idKecamatan, int idStatus) async {
-    _orderCustomerProcessedDigudang = await _adminService
-        .getDataOrderProcessedByKecamatanPengirim(idKecamatan, idStatus);
-    notifyListeners();
-  }
+  List<OrderCustomerProcessedModel>? _orderCustomerProcessedByKecamatan;
+  List<OrderCustomerProcessedModel>? get orderCustomerProcessedByKecamatan =>
+      _orderCustomerProcessedByKecamatan;
 
-  List<OrderCustomerProcessedModel>? _orderCustomerProcessedDiantar;
-  List<OrderCustomerProcessedModel>? get orderCustomerProcessedDiantar =>
-      _orderCustomerProcessedDiantar;
-
-  Future<void> getDataOrderProcessedDiantar(int idKecamatan, int idStatus) async {
-    _orderCustomerProcessedDiantar = await _adminService
-        .getDataOrderProcessedByKecamatanPengirim(idKecamatan, idStatus);
+  Future<void> getDataOrderProcessedByKecamatan(int idKecamatan) async {
+    _orderCustomerProcessedByKecamatan = await _adminService
+        .getDataOrderProcessedByKecamatanPengirim(idKecamatan);
     notifyListeners();
   }
 
