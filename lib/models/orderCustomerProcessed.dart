@@ -2,6 +2,7 @@ class OrderCustomerProcessedModel {
   final int? idOrder;
   final int idCustomerOrder;
   final int idJenisPaket;
+  final int idStatusPaket;
   final double beratPaket;
   final String namaPengirim;
   final String teleponPengirim;
@@ -20,6 +21,7 @@ class OrderCustomerProcessedModel {
     this.idOrder,
     required this.idCustomerOrder,
     required this.idJenisPaket,
+    required this.idStatusPaket,
     required this.beratPaket,
     required this.namaPengirim,
     required this.teleponPengirim,
@@ -40,6 +42,7 @@ class OrderCustomerProcessedModel {
         idOrder: json['id_order'],
         idCustomerOrder: json['id_customer_order'],
         idJenisPaket: json['id_jenis_paket'],
+        idStatusPaket: json['id_status_paket'],
         beratPaket: (json['berat'] as num).toDouble(),
         namaPengirim: json['nama_pengirim'],
         teleponPengirim: json['telepon_pengirim'],

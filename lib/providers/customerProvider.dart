@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
+import 'package:trackit_dev/models/orderCustomerProcessed.dart';
 import 'package:trackit_dev/services/customerService.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
 
@@ -57,6 +58,17 @@ class CustomerProvider with ChangeNotifier {
 
   Future<void> getDataOrderNotAccepted(int idCustomer) async {
     _orderCustomerNotAccepted = await _customerService.getDataOrderNotAccepted(
+      idCustomer,
+    );
+    notifyListeners();
+  }
+
+  List<OrderCustomerProcessedModel>? _orderCustomerProcessed;
+  List<OrderCustomerProcessedModel>? get orderCustomerProcessed =>
+      _orderCustomerProcessed;
+
+  Future<void> getDataOrderProcessed(int idCustomer) async {
+    _orderCustomerProcessed = await _customerService.getDataOrderProcessed(
       idCustomer,
     );
     notifyListeners();

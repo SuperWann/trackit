@@ -4,6 +4,7 @@ import 'package:trackit_dev/pages/customer/berandaCustomer.dart';
 import 'package:trackit_dev/pages/customer/orderCustomer.dart';
 import 'package:trackit_dev/pages/customer/profilCustomer.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
+import 'package:trackit_dev/providers/customerProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 
 class NavbarCustomer extends StatefulWidget {
@@ -23,11 +24,13 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
   void initState() {
     super.initState();
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    // final customerProvider = Provider.of<CustomerProvider>(
-    //   context,
-    //   listen: false,
-    // );
     final otherProvider = Provider.of<OtherProvider>(context, listen: false);
+    final customerProvider = Provider.of<CustomerProvider>(
+      context,
+      listen: false,
+    );
+
+    final idCustomerLogin = authProvider.dataCustomer!.id;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showDialog(
@@ -41,6 +44,7 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
         await otherProvider.getAllKecamatan(
           authProvider.dataCustomer!.kabupaten,
         );
+        await customerProvider.getDataOrderProcessed(idCustomerLogin);
         Navigator.pop(context);
       } catch (e) {
         Navigator.pop(context);
@@ -104,7 +108,7 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
     ];
 
     List<Widget> tabBar = [
-      Text('Belum Di Gudang'),
+      Text('Belum\nDi Gudang', textAlign: TextAlign.center),
       Text('Diproses'),
       Text('Terkirim'),
     ];
