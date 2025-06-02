@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:trackit_dev/models/coordinatePoint.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
 import 'package:trackit_dev/models/orderCustomerProcessed.dart';
+import 'package:trackit_dev/models/trackingHistory.dart';
 import 'package:trackit_dev/services/customerService.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
 
@@ -71,6 +73,29 @@ class CustomerProvider with ChangeNotifier {
     _orderCustomerProcessed = await _customerService.getDataOrderProcessed(
       idCustomer,
     );
+    notifyListeners();
+  }
+
+  CoordinatePointModel? _coordinatePoint;
+  CoordinatePointModel? get coordinatePoint => _coordinatePoint;
+
+  Future<void> getCoordinatesPoint({
+    required int idPengirim,
+    required int idPenerima,
+  }) async {
+    _coordinatePoint = await _customerService.getCoordinatesPoint(
+      idPengirim,
+      idPenerima,
+    );
+    notifyListeners();
+  }
+
+  List<TrackingHistoryModel>? _trackingHistory;
+  List<TrackingHistoryModel>? get trackingHistory => _trackingHistory;
+
+  Future<void> getTrackingHistory(String noResi) async {
+    _trackingHistory = await _customerService.getTrackingHistory(noResi);
+    print(_trackingHistory!.length);
     notifyListeners();
   }
 

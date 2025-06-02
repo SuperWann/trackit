@@ -10,6 +10,7 @@ import 'package:trackit_dev/providers/kurirProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 import 'package:trackit_dev/widgets/button.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
+import 'package:intl/intl.dart';
 
 class DetailOrderProcessedAdminPage extends StatefulWidget {
   static const String routeName = '/detailOrderProcessedAdmin';
@@ -109,6 +110,15 @@ class _DetailOrderProcessedAdminPageState
       } else {
         return '-';
       }
+    }
+
+    String formatTanggal(String tanggalIso) {
+      DateTime dt = DateTime.parse(tanggalIso);
+
+      // contoh format: 25 Mei 2025 19:08
+      final formatter = DateFormat('d MMMM yyyy HH:mm', 'id_ID');
+
+      return formatter.format(dt);
     }
 
     String generateResiWithDateTime() {
@@ -237,7 +247,10 @@ class _DetailOrderProcessedAdminPageState
                       getNamaJenisPaket(order.idJenisPaket),
                     ),
                     rowData('Berat', '${order.beratPaket} Kg'),
-                    rowData('Waktu Order', order.createdAt.toIso8601String()),
+                    rowData(
+                      'Waktu Order',
+                      formatTanggal(order.createdAt.toIso8601String()),
+                    ),
                     rowData('Catatan Kurir', order.catatanKurir!),
                   ],
                 ),

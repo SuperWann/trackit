@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:trackit_dev/config.dart';
+import 'package:trackit_dev/models/coordinatePoint.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
 import 'package:trackit_dev/models/orderCustomerProcessed.dart';
+import 'package:trackit_dev/models/trackingHistory.dart';
 
 class CustomerService {
   final String _baseUrl =
@@ -61,6 +63,17 @@ class CustomerService {
     }
   }
 
+  Future<List<TrackingHistoryModel>>? getTrackingHistory(String noResi) async {
+    final response = await http.get(Uri.parse('$_baseUrl/DataTrackingHistories/$noResi'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.map((json) => TrackingHistoryModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Gagal mendapatkan data tracking history: ${response.body}');
+    }
+  }
+
   Future<bool> cancelOrder(int idOrder) async {
     final response = await http.delete(
       Uri.parse('$_baseUrl/CancelOrder/$idOrder'),
@@ -70,5 +83,23 @@ class CustomerService {
       return true;
     }
     throw Exception('Gagal membatalkan order: ${response.body}');
+  }
+
+  Future<CoordinatePointModel>? getCoordinatesPoint(
+    int idPengirim,
+    int idPenerima,
+  ) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/DataCoordinatePoint/$idPengirim/$idPenerima'),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      return CoordinatePointModel.fromJson(jsonData);
+    } else {
+      throw Exception(
+        'Gagal mendapatkan data koordinat kecaatan: ${response.body}',
+      );
+    }
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trackit_dev/pages/admin/detailOrderMenungguAdmin.dart';
+import 'package:trackit_dev/pages/admin/detailOrderNotAcceptedAdmin.dart';
 import 'package:trackit_dev/pages/admin/detailOrderProcessedAdmin.dart';
 import 'package:trackit_dev/pages/admin/navbarAdmin.dart';
-import 'package:trackit_dev/pages/customer/detailOrderMenungguCustomer.dart';
+import 'package:trackit_dev/pages/customer/detailOrderAcceptedCustomer.dart';
+import 'package:trackit_dev/pages/customer/detailOrderNotAcceptedCustomer.dart';
 import 'package:trackit_dev/pages/customer/profilCustomer.dart';
 import 'package:trackit_dev/pages/splash/splashScreen.dart';
 import 'package:trackit_dev/pages/admin/berandaAdmin.dart';
@@ -20,12 +21,15 @@ import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/customerProvider.dart';
 import 'package:trackit_dev/providers/kurirProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final provider = AuthProvider();
   provider.checkLoginStatus();
+  await initializeDateFormatting('id_ID', null);
 
   runApp(
     MultiProvider(
@@ -58,8 +62,10 @@ class MyApp extends StatelessWidget {
         RegisPasswordPage.routeName: (context) => RegisPasswordPage(),
         OrderCustomerFormPage.routeName: (context) => OrderCustomerFormPage(),
         LacakResiCustomerPage.routeName: (context) => LacakResiCustomerPage(),
-        DetailOrderMenungguCustomerPage.routeName:
-            (context) => DetailOrderMenungguCustomerPage(),
+        DetailOrderNotAcceptedCustomerPage.routeName:
+            (context) => DetailOrderNotAcceptedCustomerPage(),
+        DetailOrderAcceptedCustomerPage.routeName:
+            (context) => DetailOrderAcceptedCustomerPage(),
         ProfilCustomerPage.routeName: (context) => ProfilCustomerPage(),
 
         //PEGAWAI
@@ -68,8 +74,8 @@ class MyApp extends StatelessWidget {
         //ADMIN
         NavbarAdmin.routeName: (context) => NavbarAdmin(),
         BerandaAdminPage.routeName: (context) => BerandaAdminPage(),
-        DetailOrderMenungguAdminPage.routeName:
-            (context) => DetailOrderMenungguAdminPage(),
+        DetailOrderNotAcceptedAdminPage.routeName:
+            (context) => DetailOrderNotAcceptedAdminPage(),
         DetailOrderProcessedAdminPage.routeName:
             (context) => DetailOrderProcessedAdminPage(),
 

@@ -145,7 +145,7 @@ class _OrderCustomerPageState extends State<OrderCustomerPage> {
                           onTap: () {
                             Navigator.pushNamed(
                               context,
-                              '/detailOrderProcessedAdmin',
+                              '/detailOrderAcceptedCustomer',
                               arguments: order,
                             );
                           },

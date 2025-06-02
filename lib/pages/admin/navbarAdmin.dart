@@ -40,18 +40,14 @@ class _NavbarAdminState extends State<NavbarAdmin> {
       );
 
       try {
-        await adminProvider.getDataOrderNotAcceptedByKecamatan(
-          idKecamatan,
-        );
-        await adminProvider.getDataOrderProcessedByKecamatan(
-          idKecamatan,
-        );
+        await adminProvider.getDataOrderNotAcceptedByKecamatan(idKecamatan);
+        await adminProvider.getDataOrderProcessedByKecamatan(idKecamatan);
         await otherProvider.getJenisPaket();
         await otherProvider.getAllKecamatan(
           authProvider.dataPegawai!.pegawai.kabupaten,
         );
         await kurirProvider.getDataKurir();
-        
+
         Navigator.pop(context);
       } catch (e) {
         Navigator.pop(context);

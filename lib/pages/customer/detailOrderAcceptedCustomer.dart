@@ -5,10 +5,12 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:trackit_dev/models/coordinatePoint.dart';
 import 'package:trackit_dev/models/orderCustomerProcessed.dart';
+import 'package:trackit_dev/models/trackingHistory.dart';
 import 'package:trackit_dev/providers/customerProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:intl/intl.dart';
 
 class DetailOrderAcceptedCustomerPage extends StatefulWidget {
   static const String routeName = '/detailOrderAcceptedCustomer';
@@ -30,6 +32,8 @@ class _DetailOrderAcceptedCustomerPageState
 
   LatLng? startPoint;
   LatLng? endPoint;
+
+  List<TrackingHistoryModel>? trackingHistory;
 
   Future<void> fetchRoute() async {
     final url =
@@ -79,6 +83,12 @@ class _DetailOrderAcceptedCustomerPageState
         idPengirim: order.idKecamatanPengirim,
         idPenerima: order.idKecamatanPenerima,
       );
+
+      await customerProvider.getTrackingHistory(order.noResi);
+
+      trackingHistory = customerProvider.trackingHistory;
+
+      print(trackingHistory!.length);
 
       final coordinateModel = customerProvider.coordinatePoint;
 
@@ -136,14 +146,12 @@ class _DetailOrderAcceptedCustomerPageState
         ModalRoute.of(context)?.settings.arguments
             as OrderCustomerProcessedModel;
 
-    final customerProvider = Provider.of<CustomerProvider>(
-      context,
-      listen: false,
-    );
-
     final otherProvider = Provider.of<OtherProvider>(context);
     final dataJenisPaket = otherProvider.dataJenisPaket!;
     final dataKecamatan = otherProvider.dataKecamatan!;
+
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     String getNamaJenisPaket(int id) {
       final jenis = dataJenisPaket.firstWhere(
@@ -167,6 +175,12 @@ class _DetailOrderAcceptedCustomerPageState
       } else {
         return '-';
       }
+    }
+
+    String formatTanggal(String tanggalIso) {
+      DateTime dt = DateTime.parse(tanggalIso);
+      final formatter = DateFormat('HH:mm, \nd MMMM yyyy', 'id_ID');
+      return formatter.format(dt);
     }
 
     List<Tab> tabBar = [Tab(text: 'Informasi'), Tab(text: 'Tracking')];
@@ -313,7 +327,7 @@ class _DetailOrderAcceptedCustomerPageState
                           rowData('Berat', '${order.beratPaket} Kg'),
                           rowData(
                             'Waktu Order',
-                            order.createdAt.toIso8601String(),
+                            formatTanggal(order.createdAt.toIso8601String()),
                           ),
                           rowData('Catatan Kurir', order.catatanKurir!),
                         ],
@@ -323,60 +337,197 @@ class _DetailOrderAcceptedCustomerPageState
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               height: double.infinity,
               width: double.infinity,
               child: Stack(
                 children: [
+                  Stack(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.45,
+                        child:
+                            isLoading || startPoint == null || endPoint == null
+                                ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                                : FlutterMap(
+                                  options: MapOptions(
+                                    initialCenter: startPoint!,
+                                    initialZoom: 12.0,
+                                  ),
+                                  children: [
+                                    TileLayer(
+                                      urlTemplate:
+                                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                    ),
+                                    PolylineLayer(
+                                      polylines: [
+                                        Polyline(
+                                          points: routePoints,
+                                          strokeWidth: 5.5,
+                                          color: const Color.fromARGB(
+                                            167,
+                                            54,
+                                            101,
+                                            255,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    MarkerLayer(
+                                      markers: [
+                                        Marker(
+                                          point: startPoint!,
+                                          child: const Icon(
+                                            Icons.circle,
+                                            color: Color(0xFF1F3A93),
+                                            size: 15,
+                                          ),
+                                        ),
+                                        Marker(
+                                          point: endPoint!,
+                                          child: const Icon(
+                                            Icons.location_on,
+                                            color: Color(0xFF1F3A93),
+                                            size: 40,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                      ),
+                    ],
+                  ),
                   Container(
                     width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.45,
+                    margin: EdgeInsets.only(top: screenHeight * 0.40),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                      color: Colors.white,
+                    ),
                     child:
-                        isLoading || startPoint == null || endPoint == null
-                            ? const Center(child: CircularProgressIndicator())
-                            : FlutterMap(
-                              options: MapOptions(
-                                initialCenter: startPoint!,
-                                initialZoom: 12.0,
-                              ),
+                        trackingHistory == null
+                            ? Center(child: CircularProgressIndicator())
+                            : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                TileLayer(
-                                  urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: Text(
+                                    "Trackit!",
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    order.noResi,
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  trailing: Text(
+                                    "Tracking History",
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                 ),
-                                PolylineLayer(
-                                  polylines: [
-                                    Polyline(
-                                      points: routePoints,
-                                      strokeWidth: 5.5,
-                                      color: const Color.fromARGB(
-                                        167,
-                                        54,
-                                        101,
-                                        255,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                MarkerLayer(
-                                  markers: [
-                                    Marker(
-                                      point: startPoint!,
-                                      child: const Icon(
-                                        Icons.circle,
-                                        color: Color(0xFF1F3A93),
-                                        size: 15,
-                                      ),
-                                    ),
-                                    Marker(
-                                      point: endPoint!,
-                                      child: const Icon(
-                                        Icons.location_on,
-                                        color: Color(0xFF1F3A93),
-                                        size: 40,
-                                      ),
-                                    ),
-                                  ],
+                                Divider(),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: trackingHistory!.length,
+                                    itemBuilder: (context, index) {
+                                      final isLast =
+                                          index == trackingHistory!.length - 1;
+                                      final item = trackingHistory![index];
+                                      return SizedBox(
+                                        height: screenHeight * 0.1,
+                                        child: Row(
+                                          // crossAxisAlignment:
+                                          //     CrossAxisAlignment.center,
+                                          children: [
+                                            // Waktu di kiri
+                                            SizedBox(
+                                              width:
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.width *
+                                                  0.2,
+                                              child: Text(
+                                                formatTanggal(
+                                                  order.createdAt
+                                                      .toIso8601String(),
+                                                ),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontFamily: 'Montserrat',
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 50,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    width: 10,
+                                                    height: 10,
+                                                    decoration: BoxDecoration(
+                                                      color: Color(0xFF1F3A93),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  ),
+                                                  if (!isLast)
+                                                    Expanded(
+                                                      child: Container(
+                                                        width: 2,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  top: 2,
+                                                ),
+                                                child: Text(
+                                                  item.deskripsi,
+                                                  style: TextStyle(
+                                                    color:
+                                                        index == 0
+                                                            ? Color(0xFF1F3A93)
+                                                            : Colors.grey,
+                                                    fontWeight:
+                                                        index == 0
+                                                            ? FontWeight.w700
+                                                            : FontWeight.w500,
+
+                                                    fontFamily: 'Montserrat',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
