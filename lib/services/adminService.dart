@@ -11,8 +11,10 @@ class AdminService {
       '${ApiConfig.baseUrl}'
               '/trackit/Admin'
           .trim();
-          
-  Future<List<OrderCustomerModel>>? getDataOrderNotAcceptedByKecamatan(int idKecamatan) async {
+
+  Future<List<OrderCustomerModel>>? getDataOrderNotAcceptedByKecamatan(
+    int idKecamatan,
+  ) async {
     final response = await http.get(
       Uri.parse('$_baseUrl/DataOrderNotAcceptedByKecamatan/$idKecamatan'),
     );
@@ -27,14 +29,18 @@ class AdminService {
     }
   }
 
-  Future<List<OrderCustomerProcessedModel>>? getDataOrderProcessedByKecamatanPengirim(int idKecamatan, int idStatus) async {
+  Future<List<OrderCustomerProcessedModel>>?
+  getDataOrderProcessedByKecamatanPengirim(int idKecamatan) async {
     final reponse = await http.get(
-      Uri.parse('$_baseUrl/DataOrderProcessedByKecamatanPengirim/$idKecamatan/$idStatus'),
+      Uri.parse('$_baseUrl/DataOrderProcessedByKecamatanPengirim/$idKecamatan'),
     );
 
     if (reponse.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(reponse.body);
-      return jsonData.map((json) => OrderCustomerProcessedModel.fromJson(json)).toList();
+      print(jsonData);
+      return jsonData
+          .map((json) => OrderCustomerProcessedModel.fromJson(json))
+          .toList();
     } else {
       throw Exception('Gagal mendapatkan data order: ${reponse.body}');
     }
@@ -53,5 +59,4 @@ class AdminService {
 
     throw Exception('Gagal accept order: ${response.body}!');
   }
-
 }

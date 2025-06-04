@@ -76,6 +76,13 @@ class CustomerProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getDataOrderProcessedByResi(String noResi) async {
+    _orderCustomerProcessed = await _customerService.getDataOrderProcessedByResi(
+      noResi,
+    );
+    notifyListeners();
+  }
+  
   CoordinatePointModel? _coordinatePoint;
   CoordinatePointModel? get coordinatePoint => _coordinatePoint;
 

@@ -140,7 +140,7 @@ class _OrderCustomerFormPageState extends State<OrderCustomerFormPage> {
                 Container(
                   margin: EdgeInsets.only(top: screenHeight * 0.20),
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding: EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -500,21 +500,16 @@ class _OrderCustomerFormPageState extends State<OrderCustomerFormPage> {
                                     );
 
                                 // PROSES MEMBUAT ORDER
-                                Future.delayed(
-                                  const Duration(seconds: 2),
-                                  () async {
-                                    showDialog(
-                                      context: context,
-                                      builder:
-                                          (context) => const Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                    );
-                                    await customerProvider.createOrder(
-                                      order!,
-                                      context,
-                                    );
-                                  },
+                                showDialog(
+                                  context: context,
+                                  builder:
+                                      (context) => const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                );
+                                await customerProvider.createOrder(
+                                  order!,
+                                  context,
                                 );
                               },
                               noText: 'Cek kembali',

@@ -10,7 +10,6 @@ class KurirProvider with ChangeNotifier {
 
   Future<void> getDataKurir() async {
     _kurir = await _kurirService.getDataKurir();
-    print(_kurir!);
     notifyListeners();
   }
 }

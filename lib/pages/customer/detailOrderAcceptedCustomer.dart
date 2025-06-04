@@ -88,8 +88,6 @@ class _DetailOrderAcceptedCustomerPageState
 
       trackingHistory = customerProvider.trackingHistory;
 
-      print(trackingHistory!.length);
-
       final coordinateModel = customerProvider.coordinatePoint;
 
       if (coordinateModel != null) {

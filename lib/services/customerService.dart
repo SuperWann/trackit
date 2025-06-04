@@ -63,14 +63,37 @@ class CustomerService {
     }
   }
 
-  Future<List<TrackingHistoryModel>>? getTrackingHistory(String noResi) async {
-    final response = await http.get(Uri.parse('$_baseUrl/DataTrackingHistories/$noResi'));
+  Future<List<OrderCustomerProcessedModel>>? getDataOrderProcessedByResi(
+    String noResi,
+  ) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/DataOrderProcessedByResi/$noResi'),
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
-      return jsonData.map((json) => TrackingHistoryModel.fromJson(json)).toList();
+      return jsonData
+          .map((json) => OrderCustomerProcessedModel.fromJson(json))
+          .toList();
     } else {
-      throw Exception('Gagal mendapatkan data tracking history: ${response.body}');
+      throw Exception('Gagal mendapatkan data order: ${response.body}');
+    }
+  }
+
+  Future<List<TrackingHistoryModel>>? getTrackingHistory(String noResi) async {
+    final response = await http.get(
+      Uri.parse('$_baseUrl/DataTrackingHistories/$noResi'),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      return jsonData
+          .map((json) => TrackingHistoryModel.fromJson(json))
+          .toList();
+    } else {
+      throw Exception(
+        'Gagal mendapatkan data tracking history: ${response.body}',
+      );
     }
   }
 
@@ -98,7 +121,7 @@ class CustomerService {
       return CoordinatePointModel.fromJson(jsonData);
     } else {
       throw Exception(
-        'Gagal mendapatkan data koordinat kecaatan: ${response.body}',
+        'Gagal mendapatkan data koordinat kecamatan: ${response.body}',
       );
     }
   }
