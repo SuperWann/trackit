@@ -101,8 +101,6 @@ class _NavbarAdminState extends State<NavbarAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    // final CustomerModel customer =
-    //     ModalRoute.of(context)?.settings.arguments as CustomerModel;
 
     List<Widget> _pages = [
       BerandaAdminPage(),

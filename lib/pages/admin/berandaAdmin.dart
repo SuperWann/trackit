@@ -47,7 +47,9 @@ class _BerandaAdminPageState extends State<BerandaAdminPage> {
                     child: Material(
                       borderRadius: BorderRadius.circular(10),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, '/inboundPage');
+                        },
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.13,
                           decoration: BoxDecoration(
@@ -73,7 +75,9 @@ class _BerandaAdminPageState extends State<BerandaAdminPage> {
                     child: Material(
                       borderRadius: BorderRadius.circular(10),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, '/outboundPage');
+                        },
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.13,
                           decoration: BoxDecoration(
@@ -95,12 +99,6 @@ class _BerandaAdminPageState extends State<BerandaAdminPage> {
                     ),
                   ),
                 ],
-              ),
-              Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(top: 20),
-                color: Colors.red,
-                child: ListTile(leading: Text("15")),
               ),
             ],
           ),
