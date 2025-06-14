@@ -177,7 +177,7 @@ class _DetailOrderAcceptedCustomerPageState
 
     String formatTanggal(String tanggalIso) {
       DateTime dt = DateTime.parse(tanggalIso);
-      final formatter = DateFormat('HH:mm, \nd MMMM yyyy', 'id_ID');
+      final formatter = DateFormat('HH:mm, d MMMM yyyy', 'id_ID');
       return formatter.format(dt);
     }
 
@@ -452,10 +452,7 @@ class _DetailOrderAcceptedCustomerPageState
                                       return SizedBox(
                                         height: screenHeight * 0.1,
                                         child: Row(
-                                          // crossAxisAlignment:
-                                          //     CrossAxisAlignment.center,
                                           children: [
-                                            // Waktu di kiri
                                             SizedBox(
                                               width:
                                                   MediaQuery.of(
@@ -464,7 +461,7 @@ class _DetailOrderAcceptedCustomerPageState
                                                   0.2,
                                               child: Text(
                                                 formatTanggal(
-                                                  order.createdAt
+                                                  item.timestamp
                                                       .toIso8601String(),
                                                 ),
                                                 textAlign: TextAlign.center,

@@ -32,6 +32,7 @@ class _LacakResiCustomerPageState extends State<LacakResiCustomerPage>
     setState(() {
       isLoading = true;
       error = null;
+
       // Reset data sebelumnya untuk memaksa rebuild
       trackingHistory = null;
       order = null;
@@ -62,20 +63,17 @@ class _LacakResiCustomerPageState extends State<LacakResiCustomerPage>
 
       print('Order: ${newOrder?.first.noResi}');
 
-      // Close dialog
       if (dialogShown && mounted) {
         Navigator.of(context).pop();
         dialogShown = false;
       }
 
-      // Update state
       setState(() {
         trackingHistory = newTrackingHistory;
         order = newOrder;
         isLoading = false;
       });
     } catch (e) {
-      // Close dialog if still open
       if (dialogShown && mounted) {
         Navigator.of(context).pop();
       }
@@ -87,7 +85,6 @@ class _LacakResiCustomerPageState extends State<LacakResiCustomerPage>
         order = null;
       });
 
-      // Show error message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error!), backgroundColor: Colors.red),
@@ -155,7 +152,7 @@ class _LacakResiCustomerPageState extends State<LacakResiCustomerPage>
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.2,
                   child: Text(
-                    formatTanggal(order![0].createdAt.toIso8601String()),
+                    formatTanggal(item.timestamp.toIso8601String()),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.grey,
