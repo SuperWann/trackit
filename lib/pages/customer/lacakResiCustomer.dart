@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:trackit_dev/models/orderCustomerProcessed.dart';
 import 'package:trackit_dev/models/trackingHistory.dart';
 import 'package:trackit_dev/providers/customerProvider.dart';
-import 'package:trackit_dev/services/customerService.dart';
 import 'package:trackit_dev/widgets/inputForm.dart';
 
 class LacakResiCustomerPage extends StatefulWidget {
@@ -184,12 +183,14 @@ class _LacakResiCustomerPageState extends State<LacakResiCustomerPage>
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 2),
+                    padding: EdgeInsets.only(top: 2),
                     child: Text(
                       item.deskripsi,
                       style: TextStyle(
-                        color: isLast ? Colors.grey : const Color(0xFF1F3A93),
-                        fontWeight: isLast ? FontWeight.w500 : FontWeight.w700,
+                        color: index == 0 ? Color(0xFF1F3A93) : Colors.grey,
+                        fontWeight:
+                            index == 0 ? FontWeight.w700 : FontWeight.w500,
+
                         fontFamily: 'Montserrat',
                       ),
                     ),
@@ -278,7 +279,7 @@ class _LacakResiCustomerPageState extends State<LacakResiCustomerPage>
                     width: double.infinity,
                     height: MediaQuery.of(context).size.height * 0.3,
                     child: Center(
-                      child: Container(
+                      child: SizedBox(
                         height: MediaQuery.of(context).size.height * 0.25,
                         width: MediaQuery.of(context).size.height * 0.25,
                         child:
@@ -296,9 +297,9 @@ class _LacakResiCustomerPageState extends State<LacakResiCustomerPage>
                                   4 => Image.asset(
                                     'assets/images/menuju_alamat.png',
                                   ),
-                                  _ => Image.asset('assets/images/paket_.png'),
+                                  _ => Container(),
                                 }
-                                : Image.asset('assets/images/paket_.png'),
+                                : Container(),
                       ),
                     ),
                   ),
