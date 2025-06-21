@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:trackit_dev/models/listPengirimanKurir.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/kurirProvider.dart';
+import 'package:trackit_dev/providers/otherProvider.dart';
 
 class ListKirimanPage extends StatefulWidget {
   static const String routeName = '/listkirimanPage';
@@ -23,17 +24,53 @@ class _ListKirimanPageState extends State<ListKirimanPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final kurirProvider = Provider.of<KurirProvider>(context, listen: false);
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final otherProvier = Provider.of<OtherProvider>(context, listen: false);
 
       await kurirProvider.getDataListPengiriman(
         authProvider.dataPegawai!.pegawai.id,
+      );
+      await otherProvier.getJenisPaket();
+      await otherProvier.getAllKecamatan(
+        authProvider.dataPegawai!.pegawai.kabupaten,
       );
 
       setState(() {
         listPengiriman = kurirProvider.listPengiriman;
       });
-
-      print(listPengiriman);
     });
+  }
+
+  Widget rowData(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.35,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          SizedBox(width: 10, child: Text(':')),
+          Expanded(
+            child: Text(
+              value == '' ? '-' : value,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Montserrat',
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _refreshOrder() async {
@@ -109,13 +146,6 @@ class _ListKirimanPageState extends State<ListKirimanPage> {
                             fontFamily: 'Montserrat',
                           ),
                         ),
-                        // subtitle: Text(
-                        //   'Berat: ${list.beratPaket} kg\nWaktu: ${formatTanggal(list.createdAt.toIso8601String())}',
-                        //   style: TextStyle(
-                        //     fontFamily: 'Montserrat',
-                        //     fontWeight: FontWeight.w500,
-                        //   ),
-                        // ),
                         trailing: Icon(Icons.keyboard_arrow_right_rounded),
                       );
                     },
