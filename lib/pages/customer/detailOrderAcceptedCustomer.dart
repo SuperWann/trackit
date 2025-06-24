@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:provider/provider.dart';
 import 'package:trackit_dev/models/coordinatePoint.dart';
 import 'package:trackit_dev/models/orderCustomerProcessed.dart';
@@ -149,7 +151,23 @@ class _DetailOrderAcceptedCustomerPageState
     final dataKecamatan = otherProvider.dataKecamatan!;
 
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+
+    Widget buildImageStatus(BuildContext context) {
+      switch (order.idStatusPaket) {
+        case 1:
+          return Image.asset('assets/images/img_digudang.png');
+        case 2:
+          return Image.asset('assets/images/diantar_kecamatan_penerima.png');
+        case 3:
+          return Image.asset('assets/images/img_digudang.png');
+        case 4:
+          return Image.asset('assets/images/menuju_alamat.png');
+        case 5:
+          return Image.asset('assets/images/tiba_alamat.png');
+        default:
+          return Container();
+      }
+    }
 
     String getNamaJenisPaket(int id) {
       final jenis = dataJenisPaket.firstWhere(
@@ -182,6 +200,11 @@ class _DetailOrderAcceptedCustomerPageState
     }
 
     List<Tab> tabBar = [Tab(text: 'Informasi'), Tab(text: 'Tracking')];
+
+    String statusPaket =
+        otherProvider.dataStatusPaket!
+            .firstWhere((item) => item.idStatusPaket == order.idStatusPaket)
+            .statusPaket;
 
     return DefaultTabController(
       length: tabBar.length,
@@ -230,8 +253,105 @@ class _DetailOrderAcceptedCustomerPageState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            child: buildImageStatus(context),
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            statusPaket,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(),
+                  SizedBox(height: 20),
                   Text(
-                    "Pengirim",
+                    "Informasi Order",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Montserrat',
+                      fontSize: 16,
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.all(20),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    child: Material(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10),
+                          // ignore: deprecated_member_use
+                          PrettyQr(
+                            data: order.noResi,
+                            size: 120,
+                            elementColor: Colors.black,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(width: 20),
+                              Text(
+                                order.noResi,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Clipboard.setData(
+                                    ClipboardData(text: order.noResi),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        'No Resi berhasil disalin!',
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.copy, size: 20),
+                              ),
+                            ],
+                          ),
+                          rowData(
+                            'Jenis Barang',
+                            getNamaJenisPaket(order.idJenisPaket),
+                          ),
+                          rowData('Berat', '${order.beratPaket} Kg'),
+                          rowData(
+                            'Waktu Order',
+                            formatTanggal(order.createdAt.toIso8601String()),
+                          ),
+                          rowData('Catatan Kurir', order.catatanKurir!),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "Informasi Pengirim",
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Montserrat',
@@ -265,7 +385,7 @@ class _DetailOrderAcceptedCustomerPageState
                   ),
                   SizedBox(height: 20),
                   Text(
-                    "Penerima",
+                    "Informasi Penerima",
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Montserrat',
@@ -292,42 +412,6 @@ class _DetailOrderAcceptedCustomerPageState
                             getNamaKecamatan(order.idKecamatanPenerima),
                           ),
                           rowData('Alamat', order.detailAlamatPenerima),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    "Order",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Montserrat',
-                      fontSize: 16,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    padding: const EdgeInsets.all(20),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                    ),
-                    child: Material(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      child: Column(
-                        children: [
-                          rowData(
-                            'Jenis Barang',
-                            getNamaJenisPaket(order.idJenisPaket),
-                          ),
-                          rowData('Berat', '${order.beratPaket} Kg'),
-                          rowData(
-                            'Waktu Order',
-                            formatTanggal(order.createdAt.toIso8601String()),
-                          ),
-                          rowData('Catatan Kurir', order.catatanKurir!),
                         ],
                       ),
                     ),
