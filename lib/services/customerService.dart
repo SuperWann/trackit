@@ -5,6 +5,7 @@ import 'package:trackit_dev/config.dart';
 import 'package:trackit_dev/models/coordinatePoint.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
 import 'package:trackit_dev/models/orderCustomerProcessed.dart';
+import 'package:trackit_dev/models/registrasiCustomer.dart';
 import 'package:trackit_dev/models/trackingHistory.dart';
 
 class CustomerService {
@@ -12,6 +13,22 @@ class CustomerService {
       '${ApiConfig.baseUrl}'
               '/trackit/Customer'
           .trim();
+
+  Future<bool> registCustomer(RegistrasiCustomer data) async {
+    final url = Uri.parse('$_baseUrl/RegistrasiAkunCustomer');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(data.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    }
+
+    throw Exception('Gagal membuat akun customer: ${response.body}');
+  }
 
   Future<bool> createOrder(OrderCustomerModel order) async {
     final url = Uri.parse('$_baseUrl/CreateOrder');

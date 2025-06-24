@@ -2,20 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 import 'package:trackit_dev/models/registrasiCustomer.dart';
 
-class RegisPasswordPage extends StatelessWidget {
-  static const routeName = '/regisPassword';
+class KonfirmasiPasswordPage extends StatelessWidget {
+  static const routeName = '/konfirmPasswordPage';
 
-  const RegisPasswordPage({super.key});
+  const KonfirmasiPasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String noTelepon =
-        ModalRoute.of(context)?.settings.arguments
-            as String; // get arguments dari halaman sebelumnya
+    final args =
+        ModalRoute.of(context)!.settings.arguments as RegistrasiCustomer;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Center(
@@ -33,7 +31,7 @@ class RegisPasswordPage extends StatelessWidget {
               ),
               SizedBox(height: 15),
               Text(
-                "Buat PIN",
+                "Konfirmasi PIN",
                 style: TextStyle(
                   fontSize: 28,
                   fontFamily: 'Montserrat',
@@ -41,7 +39,7 @@ class RegisPasswordPage extends StatelessWidget {
                 ),
               ),
               Text(
-                "Buat PIN sebanyak 6 digit untuk verifikasi login Anda!",
+                "Masukkan PIN sebanyak 6 digit yang telah Anda buat!",
                 style: TextStyle(
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.w500,
@@ -49,14 +47,21 @@ class RegisPasswordPage extends StatelessWidget {
               ),
               PinCodeFields(
                 onComplete: (inputPin) {
-                  Navigator.pushNamed(
-                    context,
-                    '/konfirmPasswordPage',
-                    arguments: RegistrasiCustomer(
-                      telepon: noTelepon,
-                      pin: inputPin,
-                    ),
-                  );
+                  inputPin == args.pin
+                      ? Navigator.pushNamed(
+                        context,
+                        '/regisDataCustomerPage',
+                        arguments: RegistrasiCustomer(
+                          telepon: args.telepon,
+                          pin: inputPin,
+                        ),
+                      )
+                      : ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text('PIN Salah!'),
+                        ),
+                      );
                 },
                 autoHideKeyboard: false,
                 length: 6,

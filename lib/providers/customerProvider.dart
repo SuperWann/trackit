@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:trackit_dev/models/coordinatePoint.dart';
 import 'package:trackit_dev/models/orderCustomer.dart';
 import 'package:trackit_dev/models/orderCustomerProcessed.dart';
+import 'package:trackit_dev/models/registrasiCustomer.dart';
 import 'package:trackit_dev/models/trackingHistory.dart';
+import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/services/customerService.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
 
@@ -11,6 +14,40 @@ class CustomerProvider with ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
+  Future<void> registrasiCustomer(
+    RegistrasiCustomer data,
+    BuildContext context,
+  ) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      bool isSuccess = await _customerService.registCustomer(data);
+
+      showDialog(
+        context: context,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      if (isSuccess){
+        authProvider.getDataLoginCustomer(data.telepon, data.pin);
+        Navigator.pushReplacementNamed(context, '/navbarCustomer');
+      }
+
+    } catch (e) {
+      Navigator.pop(context);
+      print(e);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Gagal: $e")));
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   Future<void> createOrder(
     OrderCustomerModel order,
@@ -77,12 +114,11 @@ class CustomerProvider with ChangeNotifier {
   }
 
   Future<void> getDataOrderProcessedByResi(String noResi) async {
-    _orderCustomerProcessed = await _customerService.getDataOrderProcessedByResi(
-      noResi,
-    );
+    _orderCustomerProcessed = await _customerService
+        .getDataOrderProcessedByResi(noResi);
     notifyListeners();
   }
-  
+
   CoordinatePointModel? _coordinatePoint;
   CoordinatePointModel? get coordinatePoint => _coordinatePoint;
 

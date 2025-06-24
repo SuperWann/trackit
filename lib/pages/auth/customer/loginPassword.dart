@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
 
@@ -26,13 +27,15 @@ class _LoginPasswordPageState extends State<LoginPasswordPage> {
     try {
       await provider.getDataLoginCustomer(noTelepon, pin);
 
-      Navigator.pop(context); // remove loading
+      Navigator.pop(context);
 
       final data = provider.dataCustomer;
 
       if (data != null) {
-        // Navigasi ke halaman utama jika login berhasil
-        print(provider.dataCustomer);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setString('telepon', noTelepon);
+
         Navigator.pushReplacementNamed(
           context,
           '/navbarCustomer',
@@ -59,14 +62,15 @@ class _LoginPasswordPageState extends State<LoginPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    // final provider = Provider.of<AuthProvider>(context, listen: false);
 
     // get arguments dari halaman sebelumnya
     final String noTelepon =
         ModalRoute.of(context)?.settings.arguments as String;
 
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Colors.white,
+      appBar: AppBar(backgroundColor: Colors.white),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Center(
@@ -80,8 +84,6 @@ class _LoginPasswordPageState extends State<LoginPasswordPage> {
               PinCodeFields(
                 onComplete: (inputPin) {
                   _loginCustomer(noTelepon, inputPin);
-                  provider.login();
-                  print(provider.isLoggedIn);
                 },
                 autoHideKeyboard: false,
                 length: 6,

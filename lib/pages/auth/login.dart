@@ -53,6 +53,7 @@ class _LoginPageState extends State<LoginCustomerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -77,161 +78,160 @@ class _LoginPageState extends State<LoginCustomerPage> {
               height: MediaQuery.of(context).size.height * 0.4,
               child: Image.asset('assets/images/img_1.jpg', fit: BoxFit.cover),
             ),
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  // controller no telepon
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InputFormWithHintText(
-                          text: 'Nomor Telepon',
-                          type: TextInputType.number,
-                          controller: _noTeleponController,
-                        ),
-                      ),
-
-                      SizedBox(width: 5),
-
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF0D47A1), // biru
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          minimumSize: const Size(70, 50),
-                          padding: EdgeInsets.zero,
-                        ),
-                        child: const Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          if (_noTeleponController.text.isEmpty) {
-                            showDialog(
-                              context: context,
-                              builder:
-                                  (context) => YesDialog(
-                                    title: 'Gagal',
-                                    content:
-                                        'Nomor telepon tidak boleh kosong!',
-                                    onYes: () => Navigator.pop(context),
-                                  ),
-                            );
-                          } else if (_noTeleponController.text.length < 10 ||
-                              _noTeleponController.text.length > 13) {
-                            showDialog(
-                              context: context,
-                              builder:
-                                  (context) => YesDialog(
-                                    title: 'Gagal',
-                                    content: 'Nomor telepon tidak valid!',
-                                    onYes: () => Navigator.pop(context),
-                                  ),
-                            );
-                          } else {
-                            _checkUserByTelepon();
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-
-                  const Center(
-                    child: Text(
-                      'Lainnya',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-
-                  // Tombol Google
-                  OutlinedButton.icon(
-                    onPressed: () {},
-
-                    icon: Image.asset(
-                      'assets/images/google.png',
-                      height: 24,
-                      width: 24,
-                    ),
-                    label: const Text(
-                      'Masuk dengan Google',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.grey.shade300),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 92,
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-
-                  // Syarat dan kebijakan
-                  Text.rich(
-                    style: const TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    TextSpan(
-                      text: 'Login berarti anda setuju dengan kami\n',
-                      style: TextStyle(color: Colors.black45, fontSize: 13),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    // controller no telepon
+                    Row(
                       children: [
-                        TextSpan(
-                          text: 'syarat layanan',
-                          style: TextStyle(
-                            color: Color(0xFF0D47A1),
-                            decoration: TextDecoration.underline,
+                        Expanded(
+                          child: InputFormWithHintText(
+                            text: 'Nomor Telepon',
+                            type: TextInputType.number,
+                            controller: _noTeleponController,
                           ),
                         ),
-                        TextSpan(text: ' dan '),
-                        TextSpan(
-                          text: 'kebijakan privasi',
-                          style: TextStyle(
-                            color: Color(0xFF0D47A1),
-                            decoration: TextDecoration.underline,
+
+                        SizedBox(width: 5),
+
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF0D47A1), // biru
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            minimumSize: const Size(70, 50),
+                            padding: EdgeInsets.zero,
                           ),
+                          child: const Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            if (_noTeleponController.text.isEmpty) {
+                              showDialog(
+                                context: context,
+                                builder:
+                                    (context) => YesDialog(
+                                      title: 'Gagal',
+                                      content:
+                                          'Nomor telepon tidak boleh kosong!',
+                                      onYes: () => Navigator.pop(context),
+                                    ),
+                              );
+                            } else if (_noTeleponController.text.length < 10 ||
+                                _noTeleponController.text.length > 13) {
+                              showDialog(
+                                context: context,
+                                builder:
+                                    (context) => YesDialog(
+                                      title: 'Gagal',
+                                      content: 'Nomor telepon tidak valid!',
+                                      onYes: () => Navigator.pop(context),
+                                    ),
+                              );
+                            } else {
+                              _checkUserByTelepon();
+                            }
+                          },
                         ),
                       ],
                     ),
-                    textAlign: TextAlign.center,
-                  ),
 
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
 
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/loginPegawai');
-                      },
-                      child: const Text(
-                        'Kamu seorang pegawai?',
+                    const Center(
+                      child: Text(
+                        'Lainnya',
                         style: TextStyle(
+                          color: Colors.grey,
                           fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF0D47A1),
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                  ),
-                ],
+
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+
+                    // Tombol Google
+                    OutlinedButton.icon(
+                      onPressed: () {},
+
+                      icon: Image.asset(
+                        'assets/images/google.png',
+                        height: 24,
+                        width: 24,
+                      ),
+                      label: const Text(
+                        'Masuk dengan Google',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                          fontSize: 14,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: Colors.grey.shade300),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 92),
+                      ),
+                    ),
+
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+
+                    // Syarat dan kebijakan
+                    Text.rich(
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500,
+                      ),
+                      TextSpan(
+                        text: 'Login berarti anda setuju dengan kami\n',
+                        style: TextStyle(color: Colors.black45, fontSize: 13),
+                        children: [
+                          TextSpan(
+                            text: 'syarat layanan',
+                            style: TextStyle(
+                              color: Color(0xFF0D47A1),
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                          TextSpan(text: ' dan '),
+                          TextSpan(
+                            text: 'kebijakan privasi',
+                            style: TextStyle(
+                              color: Color(0xFF0D47A1),
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    // SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/loginPegawai');
+                        },
+                        child: const Text(
+                          'Kamu seorang pegawai?',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF0D47A1),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
