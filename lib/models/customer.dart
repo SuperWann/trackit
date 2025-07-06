@@ -1,5 +1,5 @@
 class CustomerModel {
-  final int id;
+  int? id;
   final String nama;
   final String noTelepon;
   final String pin;
