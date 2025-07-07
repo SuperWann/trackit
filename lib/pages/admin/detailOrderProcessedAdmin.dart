@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/services.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:provider/provider.dart';
 import 'package:trackit_dev/models/kurir.dart';
 import 'package:trackit_dev/models/orderCustomerProcessed.dart';
 import 'package:trackit_dev/models/prosesOrderCustomer.dart';
-import 'package:trackit_dev/providers/adminProvider.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/kurirProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
-import 'package:trackit_dev/widgets/button.dart';
-import 'package:trackit_dev/widgets/dialog.dart';
 import 'package:intl/intl.dart';
 
 class DetailOrderProcessedAdminPage extends StatefulWidget {
@@ -35,8 +33,11 @@ class _DetailOrderProcessedAdminPageState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final kurirProvider = Provider.of<KurirProvider>(context, listen: false);
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-      await kurirProvider.getDataKurir();
+      await kurirProvider.getDataKurir(
+        authProvider.dataPegawai!.pegawai.idKecamatan,
+      );
       setState(() {
         kurirs = kurirProvider.kurir;
       });
@@ -82,11 +83,24 @@ class _DetailOrderProcessedAdminPageState
         ModalRoute.of(context)?.settings.arguments
             as OrderCustomerProcessedModel;
 
-    final authProvider = Provider.of<AuthProvider>(context);
-    final adminProvider = Provider.of<AdminProvider>(context);
     final otherProvider = Provider.of<OtherProvider>(context);
     final dataJenisPaket = otherProvider.dataJenisPaket!;
     final dataKecamatan = otherProvider.dataKecamatan!;
+
+    Widget buildImageStatus(BuildContext context) {
+      switch (order.idStatusPaket) {
+        case 1:
+          return Image.asset('assets/images/img_digudang.png');
+        case 2:
+          return Image.asset('assets/images/diantar_kecamatan_penerima.png');
+        case 3:
+          return Image.asset('assets/images/img_digudang.png');
+        case 4:
+          return Image.asset('assets/images/menuju_alamat.png');
+        default:
+          return Container();
+      }
+    }
 
     String getNamaJenisPaket(int id) {
       final jenis = dataJenisPaket.firstWhere(
@@ -121,20 +135,10 @@ class _DetailOrderProcessedAdminPageState
       return formatter.format(dt);
     }
 
-    String generateResiWithDateTime() {
-      final prefix = "TRCKIT";
-      final now = DateTime.now();
-
-      String dateTimePart =
-          '${now.year.toString().padLeft(4, '0')}'
-          '${now.month.toString().padLeft(2, '0')}'
-          '${now.day.toString().padLeft(2, '0')}'
-          '${now.hour.toString().padLeft(2, '0')}'
-          '${now.minute.toString().padLeft(2, '0')}'
-          '${now.second.toString().padLeft(2, '0')}';
-
-      return prefix + dateTimePart;
-    }
+    String statusPaket =
+        otherProvider.dataStatusPaket!
+            .firstWhere((item) => item.idStatusPaket == order.idStatusPaket)
+            .statusPaket;
 
     return Scaffold(
       backgroundColor: Color(0xFFECF0F1),
@@ -154,6 +158,101 @@ class _DetailOrderProcessedAdminPageState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // SizedBox(
+            //   height: MediaQuery.of(context).size.height * 0.3,
+            //   child: Center(
+            //     child: Column(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         SizedBox(
+            //           height: MediaQuery.of(context).size.height * 0.2,
+            //           child: buildImageStatus(context),
+            //         ),
+            //         SizedBox(height: 20),
+            //         Text(
+            //           statusPaket,
+            //           style: TextStyle(
+            //             fontWeight: FontWeight.w700,
+            //             fontFamily: 'Montserrat',
+            //             fontSize: 16,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // Divider(),
+            // SizedBox(height: 20),
+            // Text(
+            //   "Informasi Order",
+            //   style: TextStyle(
+            //     fontWeight: FontWeight.w700,
+            //     fontFamily: 'Montserrat',
+            //     fontSize: 16,
+            //   ),
+            // ),
+            // Container(
+            //   margin: const EdgeInsets.only(top: 10),
+            //   padding: const EdgeInsets.all(20),
+            //   width: double.infinity,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(10),
+            //     color: Colors.white,
+            //   ),
+            //   child: Material(
+            //     color: Colors.white,
+            //     borderRadius: BorderRadius.circular(15),
+            //     child: Column(
+            //       children: [
+            //         SizedBox(height: 10),
+            //         // ignore: deprecated_member_use
+            //         PrettyQr(
+            //           data: order.noResi,
+            //           size: 120,
+            //           elementColor: Colors.black,
+            //         ),
+            //         Row(
+            //           mainAxisAlignment: MainAxisAlignment.center,
+            //           children: [
+            //             SizedBox(width: 20),
+            //             Text(
+            //               order.noResi,
+            //               style: TextStyle(
+            //                 fontWeight: FontWeight.w700,
+            //                 fontFamily: 'Montserrat',
+            //                 fontSize: 16,
+            //               ),
+            //             ),
+            //             IconButton(
+            //               onPressed: () {
+            //                 Clipboard.setData(
+            //                   ClipboardData(text: order.noResi),
+            //                 );
+            //                 ScaffoldMessenger.of(context).showSnackBar(
+            //                   const SnackBar(
+            //                     content: Text('No Resi berhasil disalin!'),
+            //                   ),
+            //                 );
+            //               },
+            //               icon: Icon(Icons.copy, size: 20),
+            //             ),
+            //           ],
+            //         ),
+            //         rowData(
+            //           'Jenis Barang',
+            //           getNamaJenisPaket(order.idJenisPaket),
+            //         ),
+            //         rowData('Berat', '${order.beratPaket} Kg'),
+            //         rowData(
+            //           'Waktu Order',
+            //           formatTanggal(order.createdAt.toIso8601String()),
+            //         ),
+            //         rowData('Catatan Kurir', order.catatanKurir!),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            SizedBox(height: 20),
             Text(
               "Informasi Pengirim",
               style: TextStyle(
@@ -182,7 +281,6 @@ class _DetailOrderProcessedAdminPageState
                       getNamaKecamatan(order.idKecamatanPengirim),
                     ),
                     rowData('Alamat', order.detailAlamatPengirim),
-                    //[{id_kecamatan: 5, nama_kecamatan: Ambulu}, {id_kecamatan: 6, nama_kecamatan: Wuluhan}]
                   ],
                 ),
               ),
@@ -222,42 +320,6 @@ class _DetailOrderProcessedAdminPageState
             ),
             SizedBox(height: 20),
             Text(
-              "Informasi Order",
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Montserrat',
-                fontSize: 16,
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(top: 10),
-              padding: const EdgeInsets.all(20),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              child: Material(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                child: Column(
-                  children: [
-                    rowData(
-                      'Jenis Barang',
-                      getNamaJenisPaket(order.idJenisPaket),
-                    ),
-                    rowData('Berat', '${order.beratPaket} Kg'),
-                    rowData(
-                      'Waktu Order',
-                      formatTanggal(order.createdAt.toIso8601String()),
-                    ),
-                    rowData('Catatan Kurir', order.catatanKurir!),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
               "Kurir Pengirim",
               style: TextStyle(
                 fontWeight: FontWeight.w700,
@@ -269,7 +331,7 @@ class _DetailOrderProcessedAdminPageState
               margin: const EdgeInsets.only(top: 10),
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white, // Warna background tombol Dropdown
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Material(
@@ -277,51 +339,6 @@ class _DetailOrderProcessedAdminPageState
                 borderRadius: BorderRadius.circular(15),
                 child: Column(children: [rowData('Nama', order.namaKurir)]),
               ),
-            ),
-            SizedBox(height: 20),
-            LongButton(
-              text: "Proses Order   ->",
-              color: "#1F3A93",
-              colorText: "#FFFFFF",
-              onPressed: () {
-                if (idSelectedKurir == null) {
-                  Fluttertoast.showToast(
-                    msg: "Mohon pilih kurir terlebih dahulu",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.CENTER,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Color(0xFFC5172E),
-                    textColor: Colors.white,
-                    fontSize: 16.0,
-                    fontAsset: 'assets/fonts/Montserrat-Medium.ttf',
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder:
-                        (context) => YesNoDialog(
-                          title: "Konfirmasi",
-                          content:
-                              "Apakah anda yakin ingin memproses order? Pastikan customer telah memberikan barang ke gudang",
-                          onYes: () async {
-                            prosesOrder = ProsesOrderCustomerModel(
-                              noResi: generateResiWithDateTime(),
-                              idOrder: order.idOrder!,
-                              idKurir: idSelectedKurir!,
-                              deskripsi:
-                                  "Barang telah diterima oleh: Agen kecamatan ${authProvider.dataPegawai!.pegawai.kecamatan} untuk diproses.",
-                              tanggalProses: DateTime.now(),
-                            );
-                            await adminProvider.acceptOrder(
-                              context,
-                              prosesOrder!,
-                            );
-                          },
-                          onNo: () => Navigator.pop(context),
-                        ),
-                  );
-                }
-              },
             ),
           ],
         ),

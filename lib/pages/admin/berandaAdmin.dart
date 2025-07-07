@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:trackit_dev/widgets/button.dart';
 
 class BerandaAdminPage extends StatefulWidget {
   static const routeName = '/berandaAdmin';
@@ -20,16 +19,10 @@ class _BerandaAdminPageState extends State<BerandaAdminPage> {
           child: Image.asset('assets/images/login_img.png', fit: BoxFit.cover),
         ),
         Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.only(right: 20, left: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              LongButton(
-                text: "Tambah Data Order",
-                color: "#1F3A93",
-                colorText: "#FFFFFF",
-                onPressed: () {},
-              ),
               Padding(
                 padding: EdgeInsets.only(top: 20, bottom: 10),
                 child: Text(

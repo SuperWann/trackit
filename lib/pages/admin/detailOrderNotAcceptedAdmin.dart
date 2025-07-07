@@ -36,16 +36,11 @@ class _DetailOrderNotAcceptedAdminPageState
       final kurirProvider = Provider.of<KurirProvider>(context, listen: false);
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-      await kurirProvider.getDataKurir();
+      await kurirProvider.getDataKurir(
+        authProvider.dataPegawai!.pegawai.idKecamatan,
+      );
       setState(() {
-        kurirs =
-            kurirProvider.kurir
-                ?.where(
-                  (kurir) =>
-                      kurir.idKecamatan ==
-                      authProvider.dataPegawai!.pegawai.idKecamatan,
-                )
-                .toList();
+        kurirs = kurirProvider.kurir;
       });
     });
   }
@@ -350,10 +345,21 @@ class _DetailOrderNotAcceptedAdminPageState
                                   "Barang telah diterima oleh: Agen kecamatan ${authProvider.dataPegawai!.pegawai.kecamatan} untuk diproses.",
                               tanggalProses: DateTime.now(),
                             );
-                            await adminProvider.acceptOrder(
-                              context,
-                              prosesOrder!,
-                            );
+                            await adminProvider
+                                .orderAcceptedGudangKecamatanPengirim(
+                                  context,
+                                  prosesOrder!,
+                                );
+                            await adminProvider
+                                .getDataOrderNotAcceptedByKecamatan(
+                                  authProvider.dataPegawai!.pegawai.idKecamatan,
+                                );
+                            await adminProvider
+                                .getDataOrderProcessedByKecamatan(
+                                  authProvider.dataPegawai!.pegawai.idKecamatan,
+                                );
+                            setState(() {});
+                            Navigator.pop(context);
                           },
                           onNo: () => Navigator.pop(context),
                         ),

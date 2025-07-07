@@ -346,8 +346,8 @@ class _RegisDataCustomerPageState extends State<RegisDataCustomerPage> {
                     children: [
                       Expanded(
                         child: LongButton(
-                          text: "Simpan",
-                          color: "#1D1F4D",
+                          text: "Daftar",
+                          color: "#0D47A1",
                           colorText: "FFFFFF",
                           onPressed: () {
                             isComplete()

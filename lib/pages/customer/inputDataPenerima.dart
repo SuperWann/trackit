@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 import 'package:trackit_dev/widgets/button.dart';
 import 'package:trackit_dev/widgets/inputForm.dart';
@@ -109,7 +108,7 @@ class _DataPenerimaPageState extends State<DataPenerimaPage> {
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white,
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding: EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -223,12 +222,7 @@ class _DataPenerimaPageState extends State<DataPenerimaPage> {
       bottomNavigationBar: SafeArea(
         child: Container(
           color: Colors.white,
-          padding: const EdgeInsets.only(
-            right: 20,
-            left: 20,
-            bottom: 20,
-            top: 20,
-          ),
+          padding: const EdgeInsets.all(20),
           child: LongButton(
             text: "Simpan",
             color: isComplete() ? "#0D47A1" : "#C4C4C4",

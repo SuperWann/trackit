@@ -101,6 +101,7 @@ class _OrderCustomerFormPageState extends State<OrderCustomerFormPage> {
       listen: false,
     );
 
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: null,
       child: Scaffold(

@@ -1,7 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
@@ -29,7 +27,6 @@ class _OutboundPageState extends State<OutboundPage> {
 
   List<OrderCustomerProcessedModel>? dataOrder;
 
-  // PINDAHKAN CONTROLLER KE SINI (SEBAGAI INSTANCE VARIABLE)
   final TextEditingController _noResiController = TextEditingController();
 
   @override
@@ -126,7 +123,7 @@ class _OutboundPageState extends State<OutboundPage> {
 
       if (data == null || data.isEmpty) {
         if (mounted) {
-          Navigator.pop(context); // Close loading dialog
+          Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Data order tidak ditemukan")),
           );
@@ -135,6 +132,7 @@ class _OutboundPageState extends State<OutboundPage> {
       }
 
       final idStatusPaket = data.first.idStatusPaket;
+
       String kecamatanPengirim =
           otherProvider.dataKecamatan!.firstWhere(
             (e) => e['id_kecamatan'] == data.first.idKecamatanPengirim,
@@ -145,10 +143,19 @@ class _OutboundPageState extends State<OutboundPage> {
             (e) => e['id_kecamatan'] == data.first.idKecamatanPenerima,
           )['nama_kecamatan'];
 
-      final prosesOrder = ProsesOrderCustomerModel(
+      String namaKurir = data.first.namaKurir;
+
+      final sendToKecamatanPenerima = ProsesOrderCustomerModel(
         noResi: data.first.noResi,
         deskripsi:
-            "Barang dikirim dari agen kecamatan $kecamatanPengirim ke agen kecamatan $kecamatanPenerima.",
+            "Barang dikirim dari agen kecamatan $kecamatanPengirim ke agen kecamatan $kecamatanPenerima oleh kurir ${namaKurir.toUpperCase()}.",
+        tanggalProses: DateTime.now(),
+      );
+
+      final sendToAlamatPenerima = ProsesOrderCustomerModel(
+        noResi: data.first.noResi,
+        deskripsi:
+            "Barang dikirim menuju alamat penerima oleh kurir ${namaKurir.toUpperCase()}.",
         tanggalProses: DateTime.now(),
       );
 
@@ -160,7 +167,10 @@ class _OutboundPageState extends State<OutboundPage> {
               authProvider.dataPegawai!.pegawai.idKecamatan) {
             await adminProvider.orderSendKecamatanPenerima(
               context,
-              prosesOrder,
+              sendToKecamatanPenerima,
+            );
+            await adminProvider.getDataOrderProcessedByKecamatan(
+              authProvider.dataPegawai!.pegawai.idKecamatan,
             );
           } else {
             if (mounted) {
@@ -179,42 +189,118 @@ class _OutboundPageState extends State<OutboundPage> {
         case 2:
           if (mounted) {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.red,
-                content: Text(
-                  "Paket sudah diantar ke gudang kecamatan penerima!",
+            if (data.first.idKecamatanPengirim ==
+                authProvider.dataPegawai!.pegawai.idKecamatan) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    "Paket sedang diantar ke agen kecamatan penerima!",
+                  ),
                 ),
-              ),
-            );
+              );
+            } else if (data.first.idKecamatanPenerima ==
+                authProvider.dataPegawai!.pegawai.idKecamatan) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text("Paket sedang diantar ke agen kecamatan anda!"),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    "Anda bukan agen yang bersangkutan, tidak bisa menginput data!",
+                  ),
+                ),
+              );
+            }
           }
           break;
         case 3:
           if (mounted) {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Paket sudah di gudang kecamatan penerima"),
-              ),
-            );
+            // Navigator.pop(context);
+            if (data.first.idKecamatanPengirim ==
+                authProvider.dataPegawai!.pegawai.idKecamatan) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Paket sudah di agen kecamatan penerima"),
+                ),
+              );
+            } else if (data.first.idKecamatanPenerima ==
+                authProvider.dataPegawai!.pegawai.idKecamatan) {
+              adminProvider.orderSendAlamatPenerima(
+                context,
+                sendToAlamatPenerima,
+              );
+              adminProvider.getDataOrderProcessedByKecamatan(
+                authProvider.dataPegawai!.pegawai.idKecamatan,
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    "Anda bukan agen yang bersangkutan, tidak bisa menginput data!",
+                  ),
+                ),
+              );
+            }
           }
           break;
         case 4:
           if (mounted) {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Paket sudah diantar ke alamat penerima"),
-              ),
-            );
+
+            if (data.first.idKecamatanPenerima ==
+                authProvider.dataPegawai!.pegawai.idKecamatan) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Paket sudah diantar ke alamat penerima"),
+                ),
+              );
+            } else if (data.first.idKecamatanPengirim ==
+                authProvider.dataPegawai!.pegawai.idKecamatan) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Paket sudah di agen kecamatan penerima"),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    "Anda bukan agen agen yang bersangkutan, tidak bisa menginput data!",
+                  ),
+                ),
+              );
+            }
           }
           break;
         case 5:
           if (mounted) {
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Paket sudah terkirim")),
+              const SnackBar(
+                content: Text("Paket sudah terkirim menuju alamat penerima"),
+              ),
             );
+            if (data.first.idKecamatanPengirim !=
+                    authProvider.dataPegawai!.pegawai.idKecamatan ||
+                data.first.idKecamatanPenerima !=
+                    authProvider.dataPegawai!.pegawai.idKecamatan) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    "Anda bukan agen yang bersangkutan, tidak bisa menginput data!",
+                  ),
+                ),
+              );
+            }
           }
           break;
         default:

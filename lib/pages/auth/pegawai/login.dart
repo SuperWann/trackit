@@ -48,7 +48,11 @@ class _LoginPegawaiPageState extends State<LoginPegawaiPage> {
             arguments: data,
           );
         } else if (pegawaiRole == 'kurir') {
-          Navigator.pushReplacementNamed(context, '/berandaKurir');
+          Navigator.pushReplacementNamed(
+            context,
+            '/navbarKurir',
+            arguments: data,
+          );
         }
       } else {
         showDialog(
@@ -71,7 +75,8 @@ class _LoginPegawaiPageState extends State<LoginPegawaiPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Colors.white,
+      appBar: AppBar(backgroundColor: Colors.white),
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {

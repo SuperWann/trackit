@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:trackit_dev/pages/admin/berandaAdmin.dart';
 import 'package:trackit_dev/pages/admin/orderAdmin.dart';
+import 'package:trackit_dev/pages/admin/outboundAdmin.dart';
 import 'package:trackit_dev/pages/admin/profilAdmin.dart';
 import 'package:trackit_dev/providers/adminProvider.dart';
 import 'package:trackit_dev/providers/authProvider.dart';
@@ -19,9 +21,8 @@ class NavbarAdmin extends StatefulWidget {
 
 class _NavbarAdminState extends State<NavbarAdmin> {
   int _selectedIndex = 0;
-  int diGudang = 1;
-  int diAntar = 2;
-  // List<OrderCustomerModel>? orders;
+  // int diGudang = 1;
+  // int diAntar = 2;
 
   @override
   void initState() {
@@ -42,11 +43,14 @@ class _NavbarAdminState extends State<NavbarAdmin> {
       try {
         await adminProvider.getDataOrderNotAcceptedByKecamatan(idKecamatan);
         await adminProvider.getDataOrderProcessedByKecamatan(idKecamatan);
+        await kurirProvider.getDataKurir(
+          authProvider.dataPegawai!.pegawai.idKecamatan,
+        );
         await otherProvider.getJenisPaket();
         await otherProvider.getAllKecamatan(
           authProvider.dataPegawai!.pegawai.kabupaten,
         );
-        await kurirProvider.getDataKurir();
+        await otherProvider.getDataStatusPaket();
 
         Navigator.pop(context);
       } catch (e) {
@@ -62,60 +66,45 @@ class _NavbarAdminState extends State<NavbarAdmin> {
     });
   }
 
-  // Fungsi untuk konfirmasi apakah pengguna ingin keluar, saat klik tombol back
   Future<bool> _onWillPop() async {
     if (_selectedIndex != 0) {
       setState(() {
         _selectedIndex = 0;
       });
-      return false; // Jangan keluar dulu
+      return false;
     } else {
-      // Sudah di halaman Beranda
-      bool logoutConfirm = await showDialog(
-        context: context,
-        builder:
-            (context) => AlertDialog(
-              title: Text('Keluar Aplikasi'),
-              content: Text('Apakah kamu yakin ingin logout?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('Batal'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: Text('Logout'),
-                ),
-              ],
-            ),
-      );
-
-      if (logoutConfirm) {
-        Provider.of<AuthProvider>(context, listen: false).logout();
-        Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
-        return false;
-      }
+      SystemNavigator.pop();
       return false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    List<Widget> _pages = [
+    List<Widget> pages = [
       BerandaAdminPage(),
       OrderAdminPage(),
       ProfilAdminPage(),
     ];
 
     List<Widget> tabBar = [
-      Text('Belum\nDi Gudang', textAlign: TextAlign.center),
-      Text('Proses'),
-      Text('Selesai'),
+      Text(
+        'Belum\nDi Gudang (${adminProvider.orderCustomerNotAcceptedByKecamatan?.length ?? 0})',
+        textAlign: TextAlign.center,
+      ),
+      Text(
+        'Proses (${adminProvider.orderCustomerProcessedByKecamatan?.where((order) => order.idKecamatanPengirim == authProvider.dataPegawai!.pegawai.idKecamatan && order.idStatusPaket == 1 || order.idKecamatanPenerima == authProvider.dataPegawai!.pegawai.idKecamatan && order.idStatusPaket == 3 || order.idKecamatanPengirim == authProvider.dataPegawai!.pegawai.idKecamatan && order.idStatusPaket == 2 || order.idKecamatanPenerima == authProvider.dataPegawai!.pegawai.idKecamatan && order.idStatusPaket == 4).length ?? 0})',
+      ),
+      Text(
+        'Terkirim (${adminProvider.orderCustomerProcessedByKecamatan?.where((order) => order.idKecamatanPengirim == authProvider.dataPegawai!.pegawai.idKecamatan && order.idStatusPaket > 2 || order.idKecamatanPenerima == authProvider.dataPegawai!.pegawai.idKecamatan && order.idStatusPaket > 4).length ?? 0})',
+      ),
     ];
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      // ignore: deprecated_member_use
       child: WillPopScope(
         onWillPop: _onWillPop,
         child: DefaultTabController(
@@ -216,10 +205,12 @@ class _NavbarAdminState extends State<NavbarAdmin> {
                   );
                 case 2:
                   return null;
+                case 3:
+                  return AppBar();
               }
             }(),
 
-            body: _pages[_selectedIndex],
+            body: pages[_selectedIndex],
             bottomNavigationBar: BottomNavigationBar(
               backgroundColor: Colors.white,
               type: BottomNavigationBarType.fixed,
@@ -239,7 +230,7 @@ class _NavbarAdminState extends State<NavbarAdmin> {
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_rounded),
-                  label: 'Beranda',
+                  label: 'Inbound',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.my_library_books_outlined),

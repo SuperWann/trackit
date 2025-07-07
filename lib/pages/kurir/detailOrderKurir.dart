@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trackit_dev/models/listPengirimanKurir.dart';
+import 'package:trackit_dev/pages/kurir/uploadFoto.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
 import 'package:trackit_dev/widgets/button.dart';
 import 'package:trackit_dev/widgets/dialog.dart';
@@ -202,15 +203,13 @@ class _DetailOrderKurirPageState extends State<DetailOrderKurirPage> {
               color: "#1F3A93",
               colorText: "#FFFFFF",
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder:
-                      (context) => YesNoDialog(
-                        title: "Konfirmasi",
-                        content: "Apakah anda yakin ingin menyelesaikan order?",
-                        onYes: () async {},
-                        onNo: () => Navigator.pop(context),
-                      ),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            UploadFotoPage(noResi: dataPengiriman.noResi),
+                  ),
                 );
               },
             ),

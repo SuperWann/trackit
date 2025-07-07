@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:trackit_dev/pages/customer/berandaCustomer.dart';
 import 'package:trackit_dev/pages/customer/orderCustomer.dart';
@@ -30,12 +31,12 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
       listen: false,
     );
 
-    final idCustomerLogin = authProvider.dataCustomer!.id;
+    final idCustomerLogin = authProvider.dataCustomer?.id ?? 0;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       showDialog(
         context: context,
-        barrierDismissible: false, // Tidak bisa ditutup klik di luar
+        barrierDismissible: false,
         builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
@@ -44,9 +45,14 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
         await otherProvider.getAllKecamatan(
           authProvider.dataCustomer!.kabupaten,
         );
+        await customerProvider.getDataOrderNotAccepted(idCustomerLogin);
         await customerProvider.getDataOrderProcessed(idCustomerLogin);
+        await otherProvider.getDataStatusPaket();
+
+        //Menutup dialog loading
         Navigator.pop(context);
       } catch (e) {
+        //Menutup dialog loading
         Navigator.pop(context);
         print(e);
       }
@@ -67,54 +73,40 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
       });
       return false; // Jangan keluar dulu
     } else {
-      // Sudah di halaman Beranda
-      bool logoutConfirm = await showDialog(
-        context: context,
-        builder:
-            (context) => AlertDialog(
-              title: Text('Keluar Aplikasi'),
-              content: Text('Apakah kamu yakin ingin logout?'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('Batal'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: Text('Logout'),
-                ),
-              ],
-            ),
-      );
-
-      if (logoutConfirm) {
-        Provider.of<AuthProvider>(context, listen: false).logout();
-        Navigator.pushNamedAndRemoveUntil(context, '/login', (_) => false);
-        return false;
-      }
+      SystemNavigator.pop();
       return false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // final CustomerModel customer =
-    //     ModalRoute.of(context)?.settings.arguments as CustomerModel;
+    final customerProvider = Provider.of<CustomerProvider>(
+      context,
+      listen: false,
+    );
 
-    List<Widget> _pages = [
+    List<Widget> pages = [
       BerandaCustomerPage(),
       OrderCustomerPage(),
       ProfilCustomerPage(),
     ];
 
     List<Widget> tabBar = [
-      Text('Belum\nDi Gudang', textAlign: TextAlign.center),
-      Text('Diproses'),
-      Text('Terkirim'),
+      Text(
+        'Belum\nDi Gudang (${customerProvider.orderCustomerNotAccepted?.length ?? 0})',
+        textAlign: TextAlign.center,
+      ),
+      Text(
+        'Proses (${customerProvider.orderCustomerProcessed?.where((order) => order.idStatusPaket != 5).length ?? 0})',
+      ),
+      Text(
+        'Terkirim (${customerProvider.orderCustomerProcessed?.where((order) => order.idStatusPaket == 5).length ?? 0})',
+      ),
     ];
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      // ignore: deprecated_member_use
       child: WillPopScope(
         onWillPop: _onWillPop,
         child: DefaultTabController(
@@ -217,8 +209,7 @@ class _NavbarCustomerState extends State<NavbarCustomer> {
                   return null;
               }
             }(),
-
-            body: _pages[_selectedIndex],
+            body: pages[_selectedIndex],
             bottomNavigationBar: BottomNavigationBar(
               backgroundColor: Colors.white,
               type: BottomNavigationBarType.fixed,

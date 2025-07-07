@@ -153,80 +153,95 @@ class _LoginPageState extends State<LoginCustomerPage> {
                       ),
                     ),
 
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                    Expanded(
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            // Tombol Google
+                            OutlinedButton.icon(
+                              onPressed: () {},
 
-                    // Tombol Google
-                    OutlinedButton.icon(
-                      onPressed: () {},
-
-                      icon: Image.asset(
-                        'assets/images/google.png',
-                        height: 24,
-                        width: 24,
-                      ),
-                      label: const Text(
-                        'Masuk dengan Google',
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                          fontSize: 14,
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.grey.shade300),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 92),
-                      ),
-                    ),
-
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-
-                    // Syarat dan kebijakan
-                    Text.rich(
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
-                      ),
-                      TextSpan(
-                        text: 'Login berarti anda setuju dengan kami\n',
-                        style: TextStyle(color: Colors.black45, fontSize: 13),
-                        children: [
-                          TextSpan(
-                            text: 'syarat layanan',
-                            style: TextStyle(
-                              color: Color(0xFF0D47A1),
-                              decoration: TextDecoration.underline,
+                              icon: Image.asset(
+                                'assets/images/google.png',
+                                height: 24,
+                                width: 24,
+                              ),
+                              label: const Text(
+                                'Masuk dengan Google',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: Colors.grey.shade300),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 92,
+                                  vertical: 15,
+                                ),
+                              ),
                             ),
-                          ),
-                          TextSpan(text: ' dan '),
-                          TextSpan(
-                            text: 'kebijakan privasi',
-                            style: TextStyle(
-                              color: Color(0xFF0D47A1),
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
 
-                    // SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                    Center(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/loginPegawai');
-                        },
-                        child: const Text(
-                          'Kamu seorang pegawai?',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF0D47A1),
-                          ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.03,
+                            ),
+
+                            // Syarat dan kebijakan
+                            Text.rich(
+                              style: const TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500,
+                              ),
+                              TextSpan(
+                                text: 'Login berarti anda setuju dengan kami\n',
+                                style: TextStyle(
+                                  color: Colors.black45,
+                                  fontSize: 13,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text: 'syarat layanan',
+                                    style: TextStyle(
+                                      color: Color(0xFF0D47A1),
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                  TextSpan(text: ' dan '),
+                                  TextSpan(
+                                    text: 'kebijakan privasi',
+                                    style: TextStyle(
+                                      color: Color(0xFF0D47A1),
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+
+                            // SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                            Center(
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/loginPegawai');
+                                },
+                                child: const Text(
+                                  'Kamu seorang pegawai?',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF0D47A1),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trackit_dev/pages/admin/detailOrderNotAcceptedAdmin.dart';
 import 'package:trackit_dev/pages/admin/detailOrderProcessedAdmin.dart';
+import 'package:trackit_dev/pages/admin/inboundAdmin.dart';
 import 'package:trackit_dev/pages/admin/navbarAdmin.dart';
+import 'package:trackit_dev/pages/admin/outboundAdmin.dart';
+import 'package:trackit_dev/pages/auth/customer/konfirmPassword.dart';
+import 'package:trackit_dev/pages/auth/customer/regisDataCustomer.dart';
 import 'package:trackit_dev/pages/customer/detailOrderAcceptedCustomer.dart';
 import 'package:trackit_dev/pages/customer/detailOrderNotAcceptedCustomer.dart';
 import 'package:trackit_dev/pages/customer/profilCustomer.dart';
+import 'package:trackit_dev/pages/kurir/ListKiriman.dart';
+import 'package:trackit_dev/pages/kurir/detailOrderKurir.dart';
+import 'package:trackit_dev/pages/kurir/navbarKurir.dart';
 import 'package:trackit_dev/pages/splash/splashScreen.dart';
 import 'package:trackit_dev/pages/admin/berandaAdmin.dart';
 import 'package:trackit_dev/pages/auth/login.dart';
@@ -21,7 +28,6 @@ import 'package:trackit_dev/providers/authProvider.dart';
 import 'package:trackit_dev/providers/customerProvider.dart';
 import 'package:trackit_dev/providers/kurirProvider.dart';
 import 'package:trackit_dev/providers/otherProvider.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
@@ -67,6 +73,8 @@ class MyApp extends StatelessWidget {
         DetailOrderAcceptedCustomerPage.routeName:
             (context) => DetailOrderAcceptedCustomerPage(),
         ProfilCustomerPage.routeName: (context) => ProfilCustomerPage(),
+        KonfirmasiPasswordPage.routeName: (context) => KonfirmasiPasswordPage(),
+        RegisDataCustomerPage.routeName: (context) => RegisDataCustomerPage(),
 
         //PEGAWAI
         LoginPegawaiPage.routeName: (context) => LoginPegawaiPage(),
@@ -78,8 +86,14 @@ class MyApp extends StatelessWidget {
             (context) => DetailOrderNotAcceptedAdminPage(),
         DetailOrderProcessedAdminPage.routeName:
             (context) => DetailOrderProcessedAdminPage(),
+        InboundPage.routeName: (context) => InboundPage(),
+        OutboundPage.routeName: (context) => OutboundPage(),
+
 
         //KURIR
+        NavbarKurir.routeName: (context) => NavbarKurir(),
+        ListKirimanPage.routeName: (context) => ListKirimanPage(),
+        DetailOrderKurirPage.routeName: (context) => DetailOrderKurirPage(),
       },
     );
   }
