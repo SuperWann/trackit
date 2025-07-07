@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class BerandaKurirPage extends StatefulWidget {
   static const String routeName = '/berandaKurir';
-  
+
   const BerandaKurirPage({super.key});
 
   @override

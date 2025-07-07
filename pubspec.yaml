@@ -46,6 +46,13 @@ dependencies:
   latlong2: ^0.9.0
   url_launcher: ^6.2.5
   intl: ^0.20.2
+  qr_flutter: ^4.1.0
+  pretty_qr_code: ^3.4.0
+  qr_code_scanner_plus: ^2.0.10+1
+  permission_handler: ^12.0.0+1
+  path_provider: ^2.1.5
+  image_picker: ^1.1.2
+  dio: ^5.8.0+1
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +88,7 @@ flutter:
       - assets/images/diantar_kecamatan_penerima.png
       - assets/images/menuju_alamat.png
       - assets/images/paket_.png
+      - assets/images/tiba_alamat.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
